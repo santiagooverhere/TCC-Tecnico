@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comentario', function (Blueprint $table) {
-            $table->foreignId('aluno_id')->constrained('aluno')->restrictOnDelete()->cascadeOnUpdate();
+            $table->foreignId('users_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->foreignId('post_id')->constrained('post')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('nome_aluno', 100);
+            $table->string('name_user', 100);
             $table->text('texto')->nullable();
-            $table->primary(['aluno_id', 'post_id']);
+            $table->primary(['users_id', 'post_id']);
             $table->timestamps();
             $table->softDeletes();
         });

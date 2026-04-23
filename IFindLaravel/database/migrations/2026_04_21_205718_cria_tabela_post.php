@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('descricao')->nullable();
             $table->text('imagemurl');
             $table->foreignId('item_id')->constrained('item')->restrictOnDelete()->cascadeOnUpdate();
-            $table->foreignId('aluno_id')->constrained('aluno')->restrictOnDelete()->cascadeOnUpdate();
+            $table->foreignId('users_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->timestamps();
             $table->softDeletes();
         });
