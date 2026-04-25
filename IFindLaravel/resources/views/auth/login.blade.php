@@ -9,16 +9,16 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
     :root {
-      --if-green: #007A3D;
-      --if-green-light: #00A651;
+      --if-green: #00663a;
+      --if-green-light: #0c6838;
       --if-green-dim: #e8f5ee;
-      --accent: #F5A623;
-      --dark: #0D1F14;
+      --accent: #d5ff7b;
+      --dark: #079000;
     }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #f4f7f5;
+      background: #1b4f2b;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -252,14 +252,6 @@
                 <i class="bi bi-eye" id="eyeIcon"></i>
               </button>
             </div>
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="remember" name="remember" />
-              <label class="form-check-label" for="remember" style="font-size:.85rem;">Lembrar-me</label>
-            </div>
-            <a href="#" style="font-size:.85rem; color:var(--if-green); font-weight:600; text-decoration:none;">Esqueci a senha</a>
           </div>
 
           <!-- Aviso admin -->

@@ -9,11 +9,11 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
     :root {
-      --if-green: #007A3D;
-      --if-green-light: #00A651;
+      --if-green: #00663a;
+      --if-green-light: #0c6838;
       --if-green-dim: #e8f5ee;
-      --accent: #F5A623;
-      --dark: #0D1F14;
+      --accent: #d5ff7b;
+      --dark: #079000;
       --text-muted-custom: #6c7a72;
       --card-radius: 16px;
       --shadow: 0 4px 24px rgba(0,0,0,0.07);
@@ -21,14 +21,14 @@
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #f4f7f5;
+      background: #1b4f2b;
       color: var(--dark);
     }
 
     /* ── NAVBAR ─────────────────────────────────── */
     .navbar {
-      background: #fff;
-      border-bottom: 1px solid #e2ebe5;
+      background: #000000;
+      border-bottom: 1px solid #000000;
       padding: 14px 0;
       box-shadow: 0 2px 12px rgba(0,122,61,0.06);
     }
@@ -76,7 +76,7 @@
       position: absolute;
       bottom: -1px; left: 0; right: 0;
       height: 40px;
-      background: #f4f7f5;
+      background: #005f13;
       clip-path: ellipse(55% 100% at 50% 100%);
     }
     .hero h1 {
@@ -250,12 +250,6 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav me-auto ms-3 gap-1">
-          <li class="nav-item"><a class="nav-link active" href="#">Início</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Achados</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Perdidos</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Sobre</a></li>
-        </ul>
         <div class="d-flex gap-2">
           <a href="{{ route('/register') }}" class="btn btn-outline-secondary rounded-3" style="font-weight:600; font-size:.9rem;">Cadastrar-se</a>
           <a href="{{ route('/login') }}" class="btn btn-login">Entrar</a>
@@ -341,10 +335,6 @@
         <span class="section-title">Publicações recentes</span>
         <span class="badge-count">48 itens</span>
       </div>
-      <select class="form-select form-select-sm w-auto" style="border-radius:8px;">
-        <option>Mais recentes</option>
-        <option>Mais antigos</option>
-      </select>
     </div>
 
     <div class="row g-4">
@@ -502,7 +492,7 @@
           <a href="mailto:ifind@ifmg.edu.br">ifind@ifmg.edu.br</a>
         </div>
         <div class="col-md-4 text-md-end">
-          <small>© 2025 IFIND · Todos os direitos reservados</small>
+          <small>© 2026 IFIND · Todos os direitos reservados</small>
         </div>
       </div>
     </div>

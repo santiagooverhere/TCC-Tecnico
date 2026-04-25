@@ -9,18 +9,18 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
     :root {
-      --if-green: #007A3D;
-      --if-green-light: #00A651;
+      --if-green: #00663a;
+      --if-green-light: #0c6838;
       --if-green-dim: #e8f5ee;
-      --accent: #F5A623;
-      --dark: #0D1F14;
+      --accent: #d5ff7b;
+      --dark: #079000;
       --sidebar-w: 240px;
       --sidebar-bg: #0D1F14;
     }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #f0f4f2;
+      background: #41574c;
       min-height: 100vh;
     }
 
@@ -109,8 +109,8 @@
 
     /* TOP BAR */
     .topbar {
-      background: #fff;
-      border-bottom: 1px solid #e2ebe5;
+      background: #002801;
+      border-bottom: 1px solid #000000;
       padding: 14px 28px;
       display: flex;
       align-items: center;
@@ -291,10 +291,6 @@
     <a href="{{ route('/') }}" class="sidebar-link">
       <i class="bi bi-eye-fill"></i> Ver Site Público
     </a>
-    <div class="nav-section-label">Sistema</div>
-    <a href="#" class="sidebar-link">
-      <i class="bi bi-gear-fill"></i> Configurações
-    </a>
   </nav>
 
   <div class="sidebar-footer">
@@ -359,14 +355,6 @@
           <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +3 esta semana</div>
         </div>
       </div>
-      <div class="col-6 col-lg-3">
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#fce4ec;"><i class="bi bi-archive-fill" style="color:#c62828;"></i></div>
-          <div class="stat-value">13</div>
-          <div class="stat-label">Posts ativos</div>
-          <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +2 hoje</div>
-        </div>
-      </div>
     </div>
 
     <!-- TABELA COM TABS -->
@@ -402,7 +390,6 @@
                   <th>Item</th>
                   <th>Tipo</th>
                   <th>Publicado por</th>
-                  <th>Local</th>
                   <th>Data</th>
                   <th>Status</th>
                   <th>Ações</th>
@@ -413,7 +400,6 @@
                   <td><strong>Fone de ouvido preto</strong></td>
                   <td><span class="tag-tipo tag-achado">Achado</span></td>
                   <td>João Silva</td>
-                  <td>Bloco B</td>
                   <td><small class="text-muted">há 2 horas</small></td>
                   <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
                   <td>
@@ -427,7 +413,6 @@
                   <td><strong>Carteira marrom</strong></td>
                   <td><span class="tag-tipo tag-perdido">Perdido</span></td>
                   <td>Maria Souza</td>
-                  <td>Refeitório</td>
                   <td><small class="text-muted">há 5 horas</small></td>
                   <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
                   <td>
@@ -441,7 +426,6 @@
                   <td><strong>Chave com chaveiro azul</strong></td>
                   <td><span class="tag-tipo tag-achado">Achado</span></td>
                   <td>Carlos Lima</td>
-                  <td>Bloco A</td>
                   <td><small class="text-muted">há 1 dia</small></td>
                   <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
                   <td>
@@ -455,7 +439,6 @@
                   <td><strong>Mochila preta Quechua</strong></td>
                   <td><span class="tag-tipo tag-perdido">Perdido</span></td>
                   <td>Ana Costa</td>
-                  <td>Sala 14</td>
                   <td><small class="text-muted">há 2 dias</small></td>
                   <td><span class="badge" style="border-radius:6px;font-size:.72rem;background:#1565c0;">Resolvido</span></td>
                   <td>
@@ -466,7 +449,6 @@
                   <td><strong>Óculos de grau</strong></td>
                   <td><span class="tag-tipo tag-achado">Achado</span></td>
                   <td>Pedro Alves</td>
-                  <td>Lab. Informática</td>
                   <td><small class="text-muted">há 3 dias</small></td>
                   <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
                   <td>
@@ -480,7 +462,6 @@
                   <td><strong>Calculadora científica Casio</strong></td>
                   <td><span class="tag-tipo tag-perdido">Perdido</span></td>
                   <td>Luiza Ferreira</td>
-                  <td>Bloco C</td>
                   <td><small class="text-muted">há 4 dias</small></td>
                   <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
                   <td>
@@ -512,8 +493,6 @@
               <thead>
                 <tr>
                   <th>Aluno</th>
-                  <th>Matrícula</th>
-                  <th>Turma / Curso</th>
                   <th>E-mail</th>
                   <th>Cadastrado em</th>
                   <th>Posts</th>
@@ -528,12 +507,11 @@
                       <strong>João Silva</strong>
                     </div>
                   </td>
-                  <td>2023001234</td>
-                  <td>Informática 3° Ano</td>
                   <td><small>joao@email.com</small></td>
                   <td><small class="text-muted">há 2 horas</small></td>
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">3 posts</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button></td>
+                  <td><button class="btn-action btn-delete">Remover</button>
+                  <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
                 <tr>
                   <td>
@@ -542,12 +520,11 @@
                       <strong>Maria Souza</strong>
                     </div>
                   </td>
-                  <td>2023005678</td>
-                  <td>Elétrica 1° Ano</td>
-                  <td><small>maria@email.com</small></td>
+                  <td><small>maria@email.mco</small></td>
                   <td><small class="text-muted">há 5 horas</small></td>
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">1 post</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button></td>
+                  <td><button class="btn-action btn-delete">Remover</button>
+                <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
                 <tr>
                   <td>
@@ -556,12 +533,11 @@
                       <strong>Carlos Lima</strong>
                     </div>
                   </td>
-                  <td>2022009012</td>
-                  <td>Mecânica 2° Ano</td>
                   <td><small>carlos@email.com</small></td>
                   <td><small class="text-muted">há 1 dia</small></td>
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">2 posts</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button></td>
+                  <td><button class="btn-action btn-delete">Remover</button>
+                <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
                 <tr>
                   <td>
@@ -570,12 +546,11 @@
                       <strong>Ana Costa</strong>
                     </div>
                   </td>
-                  <td>2023003456</td>
-                  <td>Administração 2° Ano</td>
                   <td><small>ana@email.com</small></td>
                   <td><small class="text-muted">há 2 dias</small></td>
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">1 post</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button></td>
+                  <td><button class="btn-action btn-delete">Remover</button>
+                <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
                 <tr>
                   <td>
@@ -584,12 +559,11 @@
                       <strong>Pedro Alves</strong>
                     </div>
                   </td>
-                  <td>2021007890</td>
-                  <td>Informática 4° Ano</td>
                   <td><small>pedro@email.com</small></td>
                   <td><small class="text-muted">há 3 dias</small></td>
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">4 posts</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button></td>
+                  <td><button class="btn-action btn-delete">Remover</button>
+                <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
                 <tr>
                   <td>
@@ -598,12 +572,11 @@
                       <strong>Luiza Ferreira</strong>
                     </div>
                   </td>
-                  <td>2023008901</td>
-                  <td>Química 1° Ano</td>
                   <td><small>luiza@email.com</small></td>
                   <td><small class="text-muted">há 4 dias</small></td>
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">1 post</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button></td>
+                  <td><button class="btn-action btn-delete">Remover</button>
+                <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
               </tbody>
             </table>

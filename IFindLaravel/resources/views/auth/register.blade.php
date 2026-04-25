@@ -9,22 +9,22 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <style>
     :root {
-      --if-green: #007A3D;
-      --if-green-light: #00A651;
+      --if-green: #00663a;
+      --if-green-light: #0c6838;
       --if-green-dim: #e8f5ee;
-      --accent: #F5A623;
-      --dark: #0D1F14;
+      --accent: #d5ff7b;
+      --dark: #079000;
     }
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #f4f7f5;
+      background: #1b4f2b;
       min-height: 100vh;
     }
 
     /* ── TOP BAR ──────────────────────────────────── */
     .topbar {
-      background: #fff;
-      border-bottom: 1px solid #e2ebe5;
+      background: #000000;
+      border-bottom: 1px solid #3a3a3a;
       padding: 14px 0;
     }
     .brand {
@@ -38,8 +38,8 @@
 
     /* ── PROGRESS STEPS ─────────────────────────── */
     .steps-bar {
-      background: #fff;
-      border-bottom: 1px solid #eef2ef;
+      background: #073100;
+      border-bottom: 1px solid #000000;
       padding: 16px 0;
     }
     .step-item {
@@ -257,29 +257,6 @@
           <div class="col-md-6">
             <label class="form-label">Nome</label>
             <input type="text" name="first_name" class="form-control" placeholder="João" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Sobrenome</label>
-            <input type="text" name="last_name" class="form-control" placeholder="Silva" required />
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Matrícula (opcional)</label>
-            <input type="text" name="matricula" class="form-control" placeholder="Ex: 2023001234" />
-            <div class="form-text">Número de matrícula no Instituto Federal.</div>
-          </div>
-          <div class="col-md-6">
-            <label class="form-label">Turma / Curso</label>
-            <input type="text" name="turma" class="form-control" placeholder="Ex: Informática 3° Ano" />
-          </div>
-          <div class="col-12">
-            <label class="form-label">Telefone / WhatsApp</label>
-            <div class="input-group">
-              <span class="input-group-text" style="border-radius:10px 0 0 10px; border:1.5px solid #dde8e2; border-right:none; background:#f9fbfa;">
-                <i class="bi bi-whatsapp text-success"></i>
-              </span>
-              <input type="tel" name="phone" class="form-control" placeholder="(00) 00000-0000" style="border-left:none; border-radius: 0 10px 10px 0;" />
-            </div>
-            <div class="form-text">Usado para contato via WhatsApp nos posts. Não será exibido publicamente.</div>
           </div>
         </div>
 
