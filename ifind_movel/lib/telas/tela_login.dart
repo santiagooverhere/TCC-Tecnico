@@ -15,32 +15,68 @@ class _TelaLoginState extends State<TelaLogin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green,
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'E-mail',
+            Icon(Icons.search, size: 60, color: Colors.green[900]),
+
+            SizedBox(height: 20),
+
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelStyle: TextStyle(color: Colors.white),
+                labelText: 'E-mail',
+                prefixIcon: Icon(Icons.email, color: Colors.white,),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
+            ),
+
+            SizedBox(height: 10),
 
               TextField(
                 controller: _senhaController,
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
+                  labelStyle: TextStyle(color: Colors.white),
                   labelText: 'Senha',
+                  prefixIcon: Icon(Icons.password, color: Colors.white,),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
+
+            SizedBox(height: 10),
 
               ElevatedButton(
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/home');
                   },
                   child: Text("Entrar"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green[800],
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                ),
               ),
+
+            SizedBox(height: 10),
 
              TextButton(
                 onPressed: () {

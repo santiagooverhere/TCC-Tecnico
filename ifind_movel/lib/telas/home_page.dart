@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'tela_criar.dart';
+import 'tela_posts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,18 +14,13 @@ class _HomePageState extends State<HomePage> {
   int _indiceAtual = 0;
 
   final List<Widget> _telas = [
-    const Center(child: Text('Lista de Posts')),
-    const Center(child: Text('Formulário de Criação')),
+    const TelaPosts(),
+    const TelaCriar(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        automaticallyImplyLeading: false,
-        title: const Text('Menu Principal'),
-      ),
       body: _telas[_indiceAtual],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceAtual,

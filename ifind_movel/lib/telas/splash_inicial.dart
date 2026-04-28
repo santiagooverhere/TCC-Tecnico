@@ -12,15 +12,30 @@ class _SplashInicialState extends State<SplashInicial> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, '/login');
     });
   }
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.green,
       body: Center(
-        child: Text('Bem-vindo'),
+        child: Column(
+          mainAxisAlignment: .center,
+          children: [
+            Icon(Icons.search, size: 80, color: Colors.green[900]),
+            SizedBox(height: 20),
+            Text("Carregando...",
+            style: TextStyle(
+              color: Colors.green[900],
+              fontSize: 24,
+              )
+            ),
+            SizedBox(height: 10),
+            CircularProgressIndicator(color: Colors.white)
+          ],
+        )
       ),
     );
   }

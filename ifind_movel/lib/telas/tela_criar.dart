@@ -16,8 +16,39 @@ class _TelaCriarState extends State<TelaCriar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _tituloController,
+              decoration: const InputDecoration(
+                labelText: 'Título',
+              ),
+            ),
 
+            TextField(
+              controller: _descricaoController,
+              decoration: const InputDecoration(
+                labelText: 'Descrição',
+              ),
+            ),
+
+            TextField(
+              controller: _nomeItemController,
+              decoration: const InputDecoration(
+                labelText: 'Nome do item',
+              ),
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/home');
+              },
+              child: Text("Finalizar"),
+            ),
+          ],
+        ),
       ),
     );
   }
