@@ -16,7 +16,9 @@ return new class extends Migration
             $table->string('titulo', 50);
             $table->text('descricao')->nullable();
             $table->text('imagemurl');
-            $table->foreignId('item_id')->constrained('item')->restrictOnDelete()->cascadeOnUpdate();
+            $table->string('nome_item', 100);
+            $table->timestamp('data_encontrada')->useCurrent();
+            $table->timestamp('data_devolvida')->nullable();
             $table->foreignId('users_id')->constrained('users')->restrictOnDelete()->cascadeOnUpdate();
             $table->timestamps();
             $table->softDeletes();
