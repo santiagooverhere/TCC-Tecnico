@@ -66,7 +66,7 @@ class _TelaLoginState extends State<TelaLogin> {
 
               ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home');
+                    Navigator.pushReplacementNamed(context, '/splash');
                   },
                   child: Text("Entrar"),
                   style: ElevatedButton.styleFrom(

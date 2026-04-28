@@ -13,43 +13,43 @@ class _TelaPostsState extends State<TelaPosts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-      ListView.builder(
-          itemCount: 5,
-          itemBuilder: (context, index){
-            return
-            Card(
-              elevation: 3.0,
-              child:
-              ListTile(
-                title: Text("Item encontrado $index"),
-
-                subtitle: Text("Descrição do item"),
-                leading:
-
-                Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.camera_alt, color: Colors.grey),
-                ),
-
-                trailing: Row(
-                  mainAxisSize: .min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.comment),
-                      onPressed: () {},
-                    ),
-
-                    IconButton(
-                      icon: const Icon(Icons.share),
-                      onPressed: () {},
-                    )
-                  ],
-                ),
+      backgroundColor: Colors.green[800],
+      appBar: AppBar(
+        backgroundColor: Colors.green[900],
+        title: const Text("Achados e Perdidos", style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(8.0),
+        itemCount: 5,
+        itemBuilder: (context, index){
+          return Card(
+            elevation: 3.0,
+            color: Colors.white,
+            child: ListTile(
+              title: Text("Item encontrado $index", style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text("Descrição do item"),
+              leading: Container(
+                width: 50,
+                height: 50,
+                color: Colors.grey[300],
+                child: const Icon(Icons.camera_alt, color: Colors.grey),
               ),
-            );
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.comment, color: Colors.green[800]),
+                    onPressed: () {},
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.share, color: Colors.green[800]),
+                    onPressed: () {},
+                  )
+                ],
+              ),
+            ),
+          );
         },
       ),
     );

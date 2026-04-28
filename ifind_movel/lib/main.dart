@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const SplashInicial(),
         '/login': (context) => const TelaLogin(),
+        '/splash': (context) => const SplashLogin(),
         '/cadastro': (context) => const TelaCadastro(),
         '/home': (context) => const HomePage(),
       },
