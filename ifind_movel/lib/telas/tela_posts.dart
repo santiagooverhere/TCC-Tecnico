@@ -40,11 +40,40 @@ class _TelaPostsState extends State<TelaPosts> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.comment, color: Colors.green[800]),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Comentarios"),
+                              content: const Text("Aqui será a aba de comentários"),
+                              actions: [
+                                TextButton(onPressed: (){
+                                  Navigator.of(context).pop();
+                                }, child: const Text('ok'),
+                                ),
+                              ],
+                            );
+                          },
+                      );
+                    },
                   ),
                   IconButton(
                     icon: Icon(Icons.share, color: Colors.green[800]),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(context: context,
+                          builder: (BuildContext context) {
+                            return  AlertDialog(
+                              title: const Text('Whastapp'),
+                              content: const Text('Aqui será o compartilhamento do post para Whatsapp'),
+                              actions: [
+                                TextButton(onPressed: (){
+                                  Navigator.of(context).pop();
+                                }, child: const Text("ok"))
+                              ],
+                            );
+                          }
+                      );
+                    },
                   )
                 ],
               ),
