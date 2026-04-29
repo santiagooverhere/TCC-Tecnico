@@ -288,7 +288,7 @@
     <a href="#" class="sidebar-link active">
       <i class="bi bi-grid-fill"></i> Dashboard
     </a>
-    <a href="{{ route('/') }}" class="sidebar-link">
+    <a href="{{ route('dashboard') }}" class="sidebar-link">
       <i class="bi bi-eye-fill"></i> Ver Site Público
     </a>
   </nav>

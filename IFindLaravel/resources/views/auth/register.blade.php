@@ -197,9 +197,9 @@
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="container d-flex align-items-center justify-content-between">
-      <a href="{{ route('/') }}" class="brand">IF<span>IND</span></a>
+      <a href="{{ route('dashboard') }}" class="brand">IF<span>IND</span></a>
       <span style="font-size:.9rem; color:#888;">
-        Já tem conta? <a href="{{ route('/login') }}" style="color:var(--if-green); font-weight:700; text-decoration:none;">Entrar</a>
+        Já tem conta? <a href="{{ route('login') }}" style="color:var(--if-green); font-weight:700; text-decoration:none;">Entrar</a>
       </span>
     </div>
   </div>
@@ -235,7 +235,7 @@
         <p style="color:#888; font-size:.9rem; margin:0;">Preencha os dados abaixo para se cadastrar. Levará menos de 2 minutos.</p>
       </div>
 
-      <form action="/register" method="POST" enctype="multipart/form-data">
+      <form action="register" method="POST" enctype="multipart/form-data">
         <!-- @csrf -->
 
         <!-- FOTO -->
@@ -304,7 +304,7 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center mt-4">
-          <a href="{{ route('/login') }}" class="btn btn-back">
+          <a href="{{ route('login') }}" class="btn btn-back">
             <i class="bi bi-arrow-left me-2"></i>Voltar
           </a>
           <button type="submit" class="btn-submit">

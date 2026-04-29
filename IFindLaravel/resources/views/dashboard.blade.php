@@ -251,8 +251,8 @@
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <div class="d-flex gap-2">
-          <a href="{{ route('/register') }}" class="btn btn-outline-secondary rounded-3" style="font-weight:600; font-size:.9rem;">Cadastrar-se</a>
-          <a href="{{ route('/login') }}" class="btn btn-login">Entrar</a>
+          <a href="{{ route('register') }}" class="btn btn-outline-secondary rounded-3" style="font-weight:600; font-size:.9rem;">Cadastrar-se</a>
+          <a href="{{ route('login') }}" class="btn btn-login">Entrar</a>
         </div>
       </div>
     </div>
@@ -295,7 +295,7 @@
             <option>Eletrônicos</option>
             <option>Documentos</option>
             <option>Roupas e Acessórios</option>
-            <option>Chaves</option>
+            <option>Chaves< option> 
             <option>Outros</option>
           </select>
         </div>
@@ -325,7 +325,7 @@
       <div>
         <strong>Você está navegando sem login.</strong>
         <span class="text-muted ms-1 d-none d-sm-inline">Para publicar um item ou comentar, </span>
-        <a href="{{ route('/login') }}" class="text-success fw-bold">faça login</a> ou <a href="{{ route('/register') }}" class="text-success fw-bold">cadastre-se gratuitamente</a>.
+        <a href="{{ route('login') }}" class="text-success fw-bold">faça login</a> ou <a href="{{ route('register') }}" class="text-success fw-bold">cadastre-se gratuitamente</a>.
       </div>
     </div>
 

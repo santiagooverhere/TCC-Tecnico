@@ -235,7 +235,7 @@
         <h3>Entrar na conta</h3>
         <p class="sub">Use o e-mail institucional ou pessoal cadastrado.</p>
 
-        <form action="/login" method="POST">
+        <form action="login" method="POST">
           <!-- CSRF placeholder for Laravel -->
           <!-- @csrf -->
 
@@ -269,11 +269,11 @@
 
         <div class="text-center" style="font-size:.9rem;">
           Não tem conta?
-          <a href="{{ route('/register') }}" style="color:var(--if-green); font-weight:700; text-decoration:none;">Cadastre-se grátis</a>
+          <a href="{{ route('register') }}" style="color:var(--if-green); font-weight:700; text-decoration:none;">Cadastre-se grátis</a>
         </div>
 
         <div class="text-center mt-3">
-          <a href="{{ route('/') }}" style="color:#aaa; font-size:.85rem; text-decoration:none;">
+          <a href="{{ route('dashboard') }}" style="color:#aaa; font-size:.85rem; text-decoration:none;">
             <i class="bi bi-arrow-left me-1"></i>Voltar ao início
           </a>
         </div>
