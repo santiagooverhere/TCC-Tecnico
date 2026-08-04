@@ -29,17 +29,20 @@ class _TelaPostsState extends State<TelaPosts> {
             child: ListTile(
               title: Text("Item encontrado $index", style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: const Text("Descrição do item"),
+
               leading: Container(
                 width: 50,
                 height: 50,
                 color: Colors.grey[300],
                 child: const Icon(Icons.camera_alt, color: Colors.grey),
               ),
+
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: Icon(Icons.comment, color: Colors.green[800]),
+
                     onPressed: () {
                       showDialog(context: context,
                           builder: (BuildContext context) {
@@ -56,6 +59,7 @@ class _TelaPostsState extends State<TelaPosts> {
                           },
                       );
                     },
+
                   ),
                   IconButton(
                     icon: Icon(Icons.share, color: Colors.green[800]),

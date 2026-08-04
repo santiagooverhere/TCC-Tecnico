@@ -15,7 +15,7 @@ class _SplashInicialState extends State<SplashInicial> {
     Timer(const Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, '/login');
     });
-  }
+  } //initState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,5 +38,5 @@ class _SplashInicialState extends State<SplashInicial> {
         )
       ),
     );
-  }
+  } //build
 }
