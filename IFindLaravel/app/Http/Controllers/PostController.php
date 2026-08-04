@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
+use App\Models\User;
+
 
 class PostController extends Controller
 {
@@ -13,7 +17,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::with('user')->latest()->paginate(10);
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -21,7 +26,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        $users = User::orderBy('name')->get();
+        return view('posts.create', compact('users'));
     }
 
     /**
@@ -29,7 +35,10 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Post::create($request->validated());
+        return redirect()
+            ->route('posts.index')
+            ->with('success', 'Post criado com sucesso!');
     }
 
     /**
@@ -37,7 +46,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        $post->load(['user', 'comentarios']);
+        return view('posts.show', compact('post'));
     }
 
     /**
@@ -45,7 +55,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        $users = User::orderBy('name')->get();
+        return view('posts.edit', compact('post', 'users'));
     }
 
     /**
@@ -53,7 +64,10 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $post->update($request->validated());
+        return redirect()
+            ->route('posts.index')
+            ->with('success', 'Post atualizado com sucesso!');
     }
 
     /**
@@ -61,6 +75,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete(); // soft delete
+        return redirect()
+            ->route('posts.index')
+            ->with('success', 'Post removido com sucesso!');
     }
 }
