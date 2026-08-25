@@ -88,6 +88,13 @@ class UserController extends Controller
                 ->route('users.index')
                 ->with('error', 'Não é possível excluir usuário com posts vinculados.');
         }
+
+        if ($user->comentarios()->withTrashed()->exists()) {
+            return redirect()
+                ->route('users.index')
+                ->with('error', 'Não é possível excluir usuário com comentários vinculados');
+        }
+
         $user->delete();
         return redirect()
             ->route('users.index')
