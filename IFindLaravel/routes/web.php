@@ -9,11 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 //rotas site
 Route::get('/', [AuthController::class, 'dashboard'])->name('dashboard');
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/cadastro', [AuthController::class, 'register'])->name('register');
 
 //admin e CRUD
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
 
     //CRUD de Posts
@@ -28,6 +26,3 @@ Route::prefix('admin')->group(function () {
     //marcar post como devolvido
     Route::patch('posts/{post}/resolver', [PostController::class, 'resolver'])->name('posts.resolver');
 });
-
-//logout
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

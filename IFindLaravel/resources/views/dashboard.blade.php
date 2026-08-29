@@ -251,8 +251,18 @@
       </button>
       <div class="collapse navbar-collapse" id="navMenu">
         <div class="d-flex gap-2">
-          <a href="{{ route('register') }}" class="btn btn-outline-secondary rounded-3" style="font-weight:600; font-size:.9rem;">Cadastrar-se</a>
-          <a href="{{ route('login') }}" class="btn btn-login">Entrar</a>
+          @guest
+            <a href="{{ route('register') }}" class="btn btn-outline-secondary rounded-3" style="font-weight:600; font-size:.9rem;">Cadastrar-se</a>
+            <a href="{{ route('login') }}" class="btn btn-login">Entrar</a>
+          @else
+            @if (auth()->user()->is_admin)
+              <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary rounded-3" style="font-weight:600; font-size:.9rem;">Painel Admin</a>
+            @endif
+            <form action="{{ route('logout') }}" method="POST" class="m-0">
+              @csrf
+              <button type="submit" class="btn btn-login">Sair</button>
+            </form>
+          @endguest
         </div>
       </div>
     </div>
@@ -320,14 +330,16 @@
   <div class="container pb-5">
 
     <!-- Aviso para não logados -->
-    <div class="login-notice mb-4 d-flex align-items-center gap-3">
-      <i class="bi bi-info-circle-fill fs-4 text-success"></i>
-      <div>
-        <strong>Você está navegando sem login.</strong>
-        <span class="text-muted ms-1 d-none d-sm-inline">Para publicar um item ou comentar, </span>
-        <a href="{{ route('login') }}" class="text-success fw-bold">faça login</a> ou <a href="{{ route('register') }}" class="text-success fw-bold">cadastre-se gratuitamente</a>.
+    @guest
+      <div class="login-notice mb-4 d-flex align-items-center gap-3">
+        <i class="bi bi-info-circle-fill fs-4 text-success"></i>
+        <div>
+          <strong>Você está navegando sem login.</strong>
+          <span class="text-muted ms-1 d-none d-sm-inline">Para publicar um item ou comentar, </span>
+          <a href="{{ route('login') }}" class="text-success fw-bold">faça login</a> ou <a href="{{ route('register') }}" class="text-success fw-bold">cadastre-se gratuitamente</a>.
+        </div>
       </div>
-    </div>
+    @endguest
 
     <!-- Feed de posts -->
     <div class="d-flex align-items-center justify-content-between mb-3">

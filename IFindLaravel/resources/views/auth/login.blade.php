@@ -235,13 +235,25 @@
         <h3>Entrar na conta</h3>
         <p class="sub">Use o e-mail institucional ou pessoal cadastrado.</p>
 
-        <form action="login" method="POST">
-          <!-- CSRF placeholder for Laravel -->
-          <!-- @csrf -->
+        @if (session('status'))
+          <div class="alert alert-success py-2 small">{{ session('status') }}</div>
+        @endif
+
+        @if ($errors->any())
+          <div class="alert alert-danger py-2 small">
+            @foreach ($errors->all() as $error)
+              <div>{{ $error }}</div>
+            @endforeach
+          </div>
+        @endif
+
+        <form action="{{ route('login') }}" method="POST">
+          @csrf
 
           <div class="mb-3">
             <label class="form-label">E-mail</label>
-            <input type="email" name="email" class="form-control" placeholder="seu@email.com" required />
+            <input type="email" name="email" class="form-control" placeholder="seu@email.com"
+                   value="{{ old('email') }}" required autofocus />
           </div>
 
           <div class="mb-2">
@@ -252,6 +264,12 @@
                 <i class="bi bi-eye" id="eyeIcon"></i>
               </button>
             </div>
+          </div>
+
+          <div class="d-flex justify-content-end mb-3">
+            <a href="{{ route('password.request') }}" style="color:var(--if-green); font-size:.85rem; font-weight:600; text-decoration:none;">
+              Esqueci minha senha
+            </a>
           </div>
 
           <!-- Aviso admin -->

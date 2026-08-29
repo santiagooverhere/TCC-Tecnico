@@ -235,8 +235,16 @@
         <p style="color:#888; font-size:.9rem; margin:0;">Preencha os dados abaixo para se cadastrar. Levará menos de 2 minutos.</p>
       </div>
 
-      <form action="register" method="POST" enctype="multipart/form-data">
-        <!-- @csrf -->
+      <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+        @if ($errors->any())
+          <div class="alert alert-danger py-2 small mb-4">
+            @foreach ($errors->all() as $error)
+              <div>{{ $error }}</div>
+            @endforeach
+          </div>
+        @endif
 
         <!-- FOTO -->
         <div class="d-flex align-items-center gap-3 mb-4">
@@ -256,7 +264,7 @@
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label">Nome</label>
-            <input type="text" name="first_name" class="form-control" placeholder="João" required />
+            <input type="text" name="name" class="form-control" placeholder="João" value="{{ old('name') }}" required />
           </div>
         </div>
 
@@ -266,7 +274,7 @@
         <div class="row g-3">
           <div class="col-12">
             <label class="form-label">E-mail</label>
-            <input type="email" name="email" class="form-control" placeholder="seu@email.com" required />
+            <input type="email" name="email" class="form-control" placeholder="seu@email.com" value="{{ old('email') }}" required />
             <div class="form-text">Pode ser e-mail pessoal ou institucional.</div>
           </div>
           <div class="col-md-6">
