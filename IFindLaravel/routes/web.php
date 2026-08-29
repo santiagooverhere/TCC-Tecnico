@@ -23,10 +23,11 @@ Route::prefix('admin')->group(function () {
     Route::resource('users', UserController::class);
 
     //CRUD de Comentários
-    Route::get('comentarios', [ComentarioController::class, 'index'])->name('comentarios.index');
-    Route::get('comentarios/create', [ComentarioController::class, 'create'])->name('comentarios.create');
-    Route::post('comentarios', [ComentarioController::class, 'store'])->name('comentarios.store');
-    Route::get('comentarios/{users_id}/{post_id}/edit', [ComentarioController::class, 'edit'])->name('comentarios.edit');
-    Route::put('comentarios/{users_id}/{post_id}', [ComentarioController::class, 'update'])->name('comentarios.update');
-    Route::delete('comentarios/{users_id}/{post_id}', [ComentarioController::class, 'destroy'])->name('comentarios.destroy');
+    Route::resource('comentarios', ComentarioController::class)->except(['show']);
+
+    //marcar post como devolvido)
+    Route::patch('posts/{post}/resolver', [PostController::class, 'resolver'])->name('posts.resolver');
 });
+
+//logout do dashboard admin
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

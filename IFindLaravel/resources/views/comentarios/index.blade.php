@@ -27,9 +27,9 @@
                     <td>{{ $c->name_user }}</td>
                     <td>{{ Str::limit($c->texto, 50) }}</td>
                     <td class="d-flex gap-1">
-                        <a href="{{ route('comentarios.edit', [$c->users_id, $c->post_id]) }}"
+                        <a href="{{ route('comentarios.edit', $c) }}"
                            class="btn btn-sm btn-outline-primary">Editar</a>
-                        <form action="{{ route('comentarios.destroy', [$c->users_id, $c->post_id]) }}"
+                        <form action="{{ route('comentarios.destroy', $c) }}"
                               method="POST" onsubmit="return confirm('Remover?')">
                             @csrf
                             @method('DELETE')

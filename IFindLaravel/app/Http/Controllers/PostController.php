@@ -80,4 +80,12 @@ class PostController extends Controller
             ->route('posts.index')
             ->with('success', 'Post removido com sucesso!');
     }
+
+    public function resolver(Post $post)
+    {
+        $post->update(['data_devolvida' => now()]);
+        return redirect()
+            ->back()
+            ->with('success', 'Item marcado como devolvido!');
+    }
 }

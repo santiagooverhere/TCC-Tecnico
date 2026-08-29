@@ -55,22 +55,16 @@ class ComentarioController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $users_id, int $post_id)
+    public function edit(Comentario $comentario)
     {
-        $comentario = Comentario::where('users_id', $users_id)
-            ->where('post_id', $post_id)
-            ->firstOrFail();
         return view('comentarios.edit', compact('comentario'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateComentarioRequest $request, int $users_id, int $post_id)
+    public function update(UpdateComentarioRequest $request, Comentario $comentario)
     {
-        $comentario = Comentario::where('users_id', $users_id)
-            ->where('post_id', $post_id)
-            ->firstOrFail();
         $comentario->update($request->validated());
         return redirect()
             ->route('comentarios.index')
@@ -80,12 +74,8 @@ class ComentarioController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-
-    public function destroy(int $users_id, int $post_id)
+    public function destroy(Comentario $comentario)
     {
-        $comentario = Comentario::where('users_id', $users_id)
-            ->where('post_id', $post_id)
-            ->firstOrFail();
         $comentario->delete();
         return redirect()
             ->route('comentarios.index')

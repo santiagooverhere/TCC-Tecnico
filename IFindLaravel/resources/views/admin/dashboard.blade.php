@@ -319,7 +319,7 @@
       </div>
     </div>
     <form action="/logout" method="POST">
-      {{-- @csrf --}}
+      @csrf
       <button type="submit" class="btn-logout">
         <i class="bi bi-box-arrow-right me-1"></i>Sair
       </button>
@@ -334,25 +334,22 @@
       <div class="col-6 col-lg-3">
         <div class="stat-card">
           <div class="stat-icon" style="background:#e8f5ee;"><i class="bi bi-collection-fill text-success"></i></div>
-          <div class="stat-value">48</div>
+          <div class="stat-value">{{ $totalPosts }}</div>
           <div class="stat-label">Total de Posts</div>
-          <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +6 esta semana</div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="stat-card">
           <div class="stat-icon" style="background:#e3f2fd;"><i class="bi bi-people-fill" style="color:#1565c0;"></i></div>
-          <div class="stat-value">320</div>
+          <div class="stat-value">{{ $totalUsers }}</div>
           <div class="stat-label">Alunos cadastrados</div>
-          <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +12 este mês</div>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="stat-card">
           <div class="stat-icon" style="background:#fff8e1;"><i class="bi bi-bag-check-fill" style="color:#e67e00;"></i></div>
-          <div class="stat-value">87</div>
+          <div class="stat-value">{{ $totalDevolvidos }}</div>
           <div class="stat-label">Itens devolvidos</div>
-          <div class="stat-delta up"><i class="bi bi-arrow-up-short"></i> +3 esta semana</div>
         </div>
       </div>
     </div>
@@ -366,13 +363,13 @@
           <li class="nav-item">
             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabPosts" role="tab">
               <i class="bi bi-collection me-1"></i>Posts
-              <span class="badge ms-1" style="background:var(--if-green);font-size:.65rem;">48</span>
+              <span class="badge ms-1" style="background:var(--if-green);font-size:.65rem;">{{ $totalPosts }}</span>
             </button>
           </li>
           <li class="nav-item">
             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabAlunos" role="tab">
               <i class="bi bi-people me-1"></i>Alunos
-              <span class="badge ms-1" style="background:#1565c0;font-size:.65rem;">320</span>
+              <span class="badge ms-1" style="background:#1565c0;font-size:.65rem;">{{ $totalUsers }}</span>
             </button>
           </li>
         </ul>
@@ -388,101 +385,56 @@
               <thead>
                 <tr>
                   <th>Item</th>
-                  <th>Tipo</th>
+                  <th>Status</th>
                   <th>Publicado por</th>
                   <th>Data</th>
-                  <th>Status</th>
                   <th>Ações</th>
                 </tr>
               </thead>
               <tbody>
+                @forelse ($posts as $post)
                 <tr>
-                  <td><strong>Fone de ouvido preto</strong></td>
-                  <td><span class="tag-tipo tag-achado">Achado</span></td>
-                  <td>João Silva</td>
-                  <td><small class="text-muted">há 2 horas</small></td>
-                  <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
+                  <td><strong>{{ $post->nome_item }}</strong></td>
+                  <td>
+                    @if ($post->data_devolvida)
+                      <span class="tag-tipo" style="background:#e3f2fd;color:#1565c0;">Devolvido</span>
+                    @else
+                      <span class="tag-tipo tag-perdido">Perdido</span>
+                    @endif
+                  </td>
+                  <td>{{ $post->user->name ?? '—' }}</td>
+                  <td><small class="text-muted">{{ $post->created_at->diffForHumans() }}</small></td>
                   <td>
                     <div class="d-flex gap-1">
-                      <button class="btn-action btn-resolve">Resolver</button>
-                      <button class="btn-action btn-delete">Remover</button>
+                      @if (!$post->data_devolvida)
+                        <form action="{{ route('posts.resolver', $post) }}" method="POST">
+                          @csrf
+                          @method('PATCH')
+                          <button type="submit" class="btn-action btn-resolve">Resolver</button>
+                        </form>
+                      @endif
+                      <a href="{{ route('posts.edit', $post) }}" class="btn-action btn-resolve" style="text-decoration:none;">Editar</a>
+                      <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('Remover este post?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-action btn-delete">Remover</button>
+                      </form>
                     </div>
                   </td>
                 </tr>
+                @empty
                 <tr>
-                  <td><strong>Carteira marrom</strong></td>
-                  <td><span class="tag-tipo tag-perdido">Perdido</span></td>
-                  <td>Maria Souza</td>
-                  <td><small class="text-muted">há 5 horas</small></td>
-                  <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
-                  <td>
-                    <div class="d-flex gap-1">
-                      <button class="btn-action btn-resolve">Resolver</button>
-                      <button class="btn-action btn-delete">Remover</button>
-                    </div>
-                  </td>
+                  <td colspan="5" class="text-center text-muted py-4">Nenhum post cadastrado ainda.</td>
                 </tr>
-                <tr>
-                  <td><strong>Chave com chaveiro azul</strong></td>
-                  <td><span class="tag-tipo tag-achado">Achado</span></td>
-                  <td>Carlos Lima</td>
-                  <td><small class="text-muted">há 1 dia</small></td>
-                  <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
-                  <td>
-                    <div class="d-flex gap-1">
-                      <button class="btn-action btn-resolve">Resolver</button>
-                      <button class="btn-action btn-delete">Remover</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Mochila preta Quechua</strong></td>
-                  <td><span class="tag-tipo tag-perdido">Perdido</span></td>
-                  <td>Ana Costa</td>
-                  <td><small class="text-muted">há 2 dias</small></td>
-                  <td><span class="badge" style="border-radius:6px;font-size:.72rem;background:#1565c0;">Resolvido</span></td>
-                  <td>
-                    <button class="btn-action btn-delete">Remover</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Óculos de grau</strong></td>
-                  <td><span class="tag-tipo tag-achado">Achado</span></td>
-                  <td>Pedro Alves</td>
-                  <td><small class="text-muted">há 3 dias</small></td>
-                  <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
-                  <td>
-                    <div class="d-flex gap-1">
-                      <button class="btn-action btn-resolve">Resolver</button>
-                      <button class="btn-action btn-delete">Remover</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Calculadora científica Casio</strong></td>
-                  <td><span class="tag-tipo tag-perdido">Perdido</span></td>
-                  <td>Luiza Ferreira</td>
-                  <td><small class="text-muted">há 4 dias</small></td>
-                  <td><span class="badge bg-success" style="border-radius:6px;font-size:.72rem;">Ativo</span></td>
-                  <td>
-                    <div class="d-flex gap-1">
-                      <button class="btn-action btn-resolve">Resolver</button>
-                      <button class="btn-action btn-delete">Remover</button>
-                    </div>
-                  </td>
-                </tr>
+                @endforelse
               </tbody>
             </table>
           </div>
           <div class="table-footer">
-            <span style="font-size:.82rem;color:#aaa;">Mostrando 6 de 48 posts</span>
-            <nav><ul class="pagination pagination-sm mb-0">
-              <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
-              <li class="page-item active"><a class="page-link" href="#" style="background:var(--if-green);border-color:var(--if-green);">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">›</a></li>
-            </ul></nav>
+            <span style="font-size:.82rem;color:#aaa;">
+              Mostrando {{ $posts->count() }} de {{ $posts->total() }} posts
+            </span>
+            {{ $posts->links() }}
           </div>
         </div>
 
@@ -500,96 +452,41 @@
                 </tr>
               </thead>
               <tbody>
+                @forelse ($users as $user)
                 <tr>
                   <td>
                     <div class="d-flex align-items-center gap-2">
-                      <div class="user-avatar-sm" style="background:var(--if-green);">J</div>
-                      <strong>João Silva</strong>
+                      <div class="user-avatar-sm" style="background:var(--if-green);">{{ strtoupper(substr($user->name, 0, 1)) }}</div>
+                      <strong>{{ $user->name }}</strong>
                     </div>
                   </td>
-                  <td><small>joao@email.com</small></td>
-                  <td><small class="text-muted">há 2 horas</small></td>
-                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">3 posts</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button>
-                  <button class="btn-action btn-resolve">Editar</button></td>
-                </tr>
-                <tr>
+                  <td><small>{{ $user->email }}</small></td>
+                  <td><small class="text-muted">{{ $user->created_at->diffForHumans() }}</small></td>
+                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">{{ $user->posts_count }} {{ Str::plural('post', $user->posts_count) }}</span></td>
                   <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="user-avatar-sm" style="background:#e67e00;">M</div>
-                      <strong>Maria Souza</strong>
+                    <div class="d-flex gap-1">
+                      <a href="{{ route('users.edit', $user) }}" class="btn-action btn-resolve" style="text-decoration:none;">Editar</a>
+                      <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Remover este aluno?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-action btn-delete">Remover</button>
+                      </form>
                     </div>
                   </td>
-                  <td><small>maria@email.mco</small></td>
-                  <td><small class="text-muted">há 5 horas</small></td>
-                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">1 post</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button>
-                <button class="btn-action btn-resolve">Editar</button></td>
                 </tr>
+                @empty
                 <tr>
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="user-avatar-sm" style="background:#1565c0;">C</div>
-                      <strong>Carlos Lima</strong>
-                    </div>
-                  </td>
-                  <td><small>carlos@email.com</small></td>
-                  <td><small class="text-muted">há 1 dia</small></td>
-                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">2 posts</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button>
-                <button class="btn-action btn-resolve">Editar</button></td>
+                  <td colspan="5" class="text-center text-muted py-4">Nenhum aluno cadastrado ainda.</td>
                 </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="user-avatar-sm" style="background:#6a1b9a;">A</div>
-                      <strong>Ana Costa</strong>
-                    </div>
-                  </td>
-                  <td><small>ana@email.com</small></td>
-                  <td><small class="text-muted">há 2 dias</small></td>
-                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">1 post</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button>
-                <button class="btn-action btn-resolve">Editar</button></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="user-avatar-sm" style="background:#00796b;">P</div>
-                      <strong>Pedro Alves</strong>
-                    </div>
-                  </td>
-                  <td><small>pedro@email.com</small></td>
-                  <td><small class="text-muted">há 3 dias</small></td>
-                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">4 posts</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button>
-                <button class="btn-action btn-resolve">Editar</button></td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="user-avatar-sm" style="background:#c62828;">L</div>
-                      <strong>Luiza Ferreira</strong>
-                    </div>
-                  </td>
-                  <td><small>luiza@email.com</small></td>
-                  <td><small class="text-muted">há 4 dias</small></td>
-                  <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">1 post</span></td>
-                  <td><button class="btn-action btn-delete">Remover</button>
-                <button class="btn-action btn-resolve">Editar</button></td>
-                </tr>
+                @endforelse
               </tbody>
             </table>
           </div>
           <div class="table-footer">
-            <span style="font-size:.82rem;color:#aaa;">Mostrando 6 de 320 alunos</span>
-            <nav><ul class="pagination pagination-sm mb-0">
-              <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
-              <li class="page-item active"><a class="page-link" href="#" style="background:var(--if-green);border-color:var(--if-green);">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">›</a></li>
-            </ul></nav>
+            <span style="font-size:.82rem;color:#aaa;">
+              Mostrando {{ $users->count() }} de {{ $users->total() }} alunos
+            </span>
+            {{ $users->links() }}
           </div>
         </div>
 
