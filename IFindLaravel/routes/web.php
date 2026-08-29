@@ -17,17 +17,17 @@ Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
 
     //CRUD de Posts
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class)->only(['store', 'show', 'update', 'destroy']);
 
     //CRUD de Users
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->only(['store', 'show', 'update', 'destroy']);
 
     //CRUD de Comentários
-    Route::resource('comentarios', ComentarioController::class)->except(['show']);
+    Route::resource('comentarios', ComentarioController::class)->only(['store', 'update', 'destroy']);
 
-    //marcar post como devolvido)
+    //marcar post como devolvido
     Route::patch('posts/{post}/resolver', [PostController::class, 'resolver'])->name('posts.resolver');
 });
 
-//logout do dashboard admin
+//logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

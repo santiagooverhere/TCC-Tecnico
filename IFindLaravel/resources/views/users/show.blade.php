@@ -7,8 +7,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>{{ $user->name }}</h1>
         <div class="d-flex gap-2">
-            <a href="{{ route('users.edit', $user) }}" class="btn btn-outline-primary">Editar</a>
-            <a href="{{ route('users.index') }}" class="btn btn-secondary">Voltar</a>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-primary">Editar</a>
+            <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Voltar</a>
         </div>
     </div>
 
