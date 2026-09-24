@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titulo', 50);
             $table->text('descricao')->nullable();
-            $table->text('imagemurl');
+            $table->text('imagemurl')->nullable();
             $table->string('nome_item', 100);
             $table->timestamp('data_encontrada')->useCurrent();
             $table->timestamp('data_devolvida')->nullable();

@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IFIND — Achados e Perdidos</title>
+  <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
@@ -191,8 +195,8 @@
     .tag-achado { background: #e8f5ee; color: var(--if-green); }
     .tag-perdido { background: #fff3e0; color: #e67e00; }
 
-    .btn-whatsapp {
-      background: #25D366;
+    .btn-gmail {
+      background: #EA4335;
       color: #fff;
       border-radius: 8px;
       font-size: .8rem;
@@ -204,7 +208,7 @@
       gap: 5px;
       transition: background .2s;
     }
-    .btn-whatsapp:hover { background: #1ebe5d; color: #fff; }
+    .btn-gmail:hover { background: #c5321a; color: #fff; }
 
     .meta-info {
       font-size: .75rem;
@@ -282,7 +286,7 @@
             </div>
             <div class="d-flex align-items-center gap-2 text-white-50">
               <i class="bi bi-bag-check-fill fs-5 text-white"></i>
-              <span style="font-size:.9rem;">87 itens devolvidos</span>
+              <span style="font-size:.9rem;">{{ $totalDevolvidos }} {{ Str::plural('item devolvido', $totalDevolvidos) }}</span>
             </div>
           </div>
         </div>
@@ -293,36 +297,28 @@
   <!-- SEARCH BAR -->
   <div class="container search-bar-wrapper mb-4">
     <div class="search-card">
-      <div class="row g-2 align-items-end">
-        <div class="col-12 col-md-5">
-          <label class="form-label fw-600 small mb-1">Buscar item</label>
-          <input type="text" class="form-control" placeholder="Ex: carteira, fone, chave..." />
+      <form action="{{ route('dashboard') }}" method="GET">
+        <div class="row g-2 align-items-end">
+          <div class="col-12 col-md-7">
+            <label class="form-label fw-600 small mb-1">Buscar item</label>
+            <input type="text" name="busca" class="form-control" placeholder="Ex: carteira, fone, chave..."
+                   value="{{ request('busca') }}" />
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="form-label fw-600 small mb-1">Tipo</label>
+            <select name="tipo" class="form-select">
+              <option value="" @selected(request('tipo') === null || request('tipo') === '')>Todos</option>
+              <option value="achado" @selected(request('tipo') === 'achado')>Achado</option>
+              <option value="devolvido" @selected(request('tipo') === 'devolvido')>Devolvido</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-2">
+            <button type="submit" class="btn btn-search w-100">
+              <i class="bi bi-search me-1"></i> Buscar
+            </button>
+          </div>
         </div>
-        <div class="col-6 col-md-3">
-          <label class="form-label fw-600 small mb-1">Categoria</label>
-          <select class="form-select">
-            <option value="">Todas</option>
-            <option>Eletrônicos</option>
-            <option>Documentos</option>
-            <option>Roupas e Acessórios</option>
-            <option>Chaves< option> 
-            <option>Outros</option>
-          </select>
-        </div>
-        <div class="col-6 col-md-2">
-          <label class="form-label fw-600 small mb-1">Tipo</label>
-          <select class="form-select">
-            <option value="">Todos</option>
-            <option>Achado</option>
-            <option>Perdido</option>
-          </select>
-        </div>
-        <div class="col-12 col-md-2">
-          <button class="btn btn-search w-100">
-            <i class="bi bi-search me-1"></i> Buscar
-          </button>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 
@@ -335,7 +331,7 @@
         <i class="bi bi-info-circle-fill fs-4 text-success"></i>
         <div>
           <strong>Você está navegando sem login.</strong>
-          <span class="text-muted ms-1 d-none d-sm-inline">Para publicar um item ou comentar, </span>
+          <span class="text-muted ms-1 d-none d-sm-inline">Para publicar um item</span>
           <a href="{{ route('login') }}" class="text-success fw-bold">faça login</a> ou <a href="{{ route('register') }}" class="text-success fw-bold">cadastre-se gratuitamente</a>.
         </div>
       </div>
@@ -345,150 +341,53 @@
     <div class="d-flex align-items-center justify-content-between mb-3">
       <div class="d-flex align-items-center gap-2">
         <span class="section-title">Publicações recentes</span>
-        <span class="badge-count">48 itens</span>
+        <span class="badge-count">{{ $totalPosts }} {{ Str::plural('item', $totalPosts) }}</span>
       </div>
     </div>
 
     <div class="row g-4">
-      <!-- Card 1 -->
-      <div class="col-sm-6 col-lg-4 col-xl-3">
-        <div class="item-card card">
-          <img src="https://placehold.co/400x200/e8f5ee/007A3D?text=Foto+do+Item" alt="Item achado" />
-          <div class="card-body">
-            <span class="tag-tipo tag-achado mb-2 d-inline-block"><i class="bi bi-check-circle-fill me-1"></i>Achado</span>
-            <h6 class="card-title">Fone de ouvido preto</h6>
-            <p class="card-text">Encontrado próximo à biblioteca, bloco B. Sem capa protetora.</p>
-          </div>
-          <div class="card-footer">
-            <div>
-              <div class="meta-info"><i class="bi bi-geo-alt"></i> Bloco B</div>
-              <div class="meta-info mt-1"><i class="bi bi-clock"></i> há 2 horas</div>
+      @forelse ($posts as $post)
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="item-card card">
+            <img src="{{ $post->imagem_exibicao }}" alt="{{ $post->nome_item }}" />
+            <div class="card-body">
+              @if ($post->data_devolvida)
+                <span class="tag-tipo tag-achado mb-2 d-inline-block"><i class="bi bi-check-circle-fill me-1"></i>Devolvido</span>
+              @else
+                <span class="tag-tipo tag-perdido mb-2 d-inline-block"><i class="bi bi-exclamation-circle-fill me-1"></i>Achado</span>
+              @endif
+              <h6 class="card-title">{{ $post->nome_item }}</h6>
+              <p class="card-text">{{ Str::limit($post->descricao ?? '', 90) ?: 'Sem descrição.' }}</p>
             </div>
-            <a href="https://wa.me/?text=Encontrei+esse+item+no+IFIND" target="_blank" class="btn-whatsapp">
-              <i class="bi bi-whatsapp"></i> Contato
-            </a>
+            <div class="card-footer">
+              <div>
+                <div class="meta-info"><i class="bi bi-clock"></i> {{ $post->data_encontrada?->diffForHumans() ?? '—' }}</div>
+              </div>
+              @if ($post->user && $post->user->email)
+                <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{ urlencode($post->user->email) }}&su={{ urlencode('IFIND - Sobre o item: ' . $post->nome_item) }}&body={{ urlencode("Olá! Vi seu post sobre \"{$post->nome_item}\" no IFIND e gostaria de falar sobre isso.") }}&tf=cm"
+                   target="_blank" class="btn-gmail">
+                  <i class="bi bi-envelope-fill"></i> Contato
+                </a>
+              @endif
+            </div>
           </div>
         </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="col-sm-6 col-lg-4 col-xl-3">
-        <div class="item-card card">
-          <img src="https://placehold.co/400x200/fff3e0/e67e00?text=Foto+do+Item" alt="Item perdido" />
-          <div class="card-body">
-            <span class="tag-tipo tag-perdido mb-2 d-inline-block"><i class="bi bi-exclamation-circle-fill me-1"></i>Perdido</span>
-            <h6 class="card-title">Carteira marrom</h6>
-            <p class="card-text">Perdi no refeitório na hora do almoço. Contém documentos importantes.</p>
-          </div>
-          <div class="card-footer">
-            <div>
-              <div class="meta-info"><i class="bi bi-geo-alt"></i> Refeitório</div>
-              <div class="meta-info mt-1"><i class="bi bi-clock"></i> há 5 horas</div>
-            </div>
-            <a href="https://wa.me/?text=Vi+esse+item+no+IFIND" target="_blank" class="btn-whatsapp">
-              <i class="bi bi-whatsapp"></i> Contato
-            </a>
+      @empty
+        <div class="col-12">
+          <div class="text-center text-white-50 py-5">
+            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+            Nenhum item encontrado.
           </div>
         </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="col-sm-6 col-lg-4 col-xl-3">
-        <div class="item-card card">
-          <img src="https://placehold.co/400x200/e8f5ee/007A3D?text=Foto+do+Item" alt="Item achado" />
-          <div class="card-body">
-            <span class="tag-tipo tag-achado mb-2 d-inline-block"><i class="bi bi-check-circle-fill me-1"></i>Achado</span>
-            <h6 class="card-title">Chave com chaveiro azul</h6>
-            <p class="card-text">Achada no corredor do bloco de salas de aula, térreo.</p>
-          </div>
-          <div class="card-footer">
-            <div>
-              <div class="meta-info"><i class="bi bi-geo-alt"></i> Bloco A</div>
-              <div class="meta-info mt-1"><i class="bi bi-clock"></i> há 1 dia</div>
-            </div>
-            <a href="https://wa.me/?text=Vi+esse+item+no+IFIND" target="_blank" class="btn-whatsapp">
-              <i class="bi bi-whatsapp"></i> Contato
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="col-sm-6 col-lg-4 col-xl-3">
-        <div class="item-card card">
-          <img src="https://placehold.co/400x200/fff3e0/e67e00?text=Foto+do+Item" alt="Item perdido" />
-          <div class="card-body">
-            <span class="tag-tipo tag-perdido mb-2 d-inline-block"><i class="bi bi-exclamation-circle-fill me-1"></i>Perdido</span>
-            <h6 class="card-title">Mochila preta Quechua</h6>
-            <p class="card-text">Esquecida na sala 14 no final da tarde. Tem cadernos e um estojo roxo.</p>
-          </div>
-          <div class="card-footer">
-            <div>
-              <div class="meta-info"><i class="bi bi-geo-alt"></i> Sala 14</div>
-              <div class="meta-info mt-1"><i class="bi bi-clock"></i> há 2 dias</div>
-            </div>
-            <a href="https://wa.me/?text=Vi+esse+item+no+IFIND" target="_blank" class="btn-whatsapp">
-              <i class="bi bi-whatsapp"></i> Contato
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="col-sm-6 col-lg-4 col-xl-3">
-        <div class="item-card card">
-          <img src="https://placehold.co/400x200/e8f5ee/007A3D?text=Foto+do+Item" alt="Item achado" />
-          <div class="card-body">
-            <span class="tag-tipo tag-achado mb-2 d-inline-block"><i class="bi bi-check-circle-fill me-1"></i>Achado</span>
-            <h6 class="card-title">Óculos de grau</h6>
-            <p class="card-text">Encontrado no laboratório de informática. Armação preta fina.</p>
-          </div>
-          <div class="card-footer">
-            <div>
-              <div class="meta-info"><i class="bi bi-geo-alt"></i> Lab. Informática</div>
-              <div class="meta-info mt-1"><i class="bi bi-clock"></i> há 3 dias</div>
-            </div>
-            <a href="https://wa.me/?text=Vi+esse+item+no+IFIND" target="_blank" class="btn-whatsapp">
-              <i class="bi bi-whatsapp"></i> Contato
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 6 -->
-      <div class="col-sm-6 col-lg-4 col-xl-3">
-        <div class="item-card card">
-          <img src="https://placehold.co/400x200/fff3e0/e67e00?text=Foto+do+Item" alt="Item perdido" />
-          <div class="card-body">
-            <span class="tag-tipo tag-perdido mb-2 d-inline-block"><i class="bi bi-exclamation-circle-fill me-1"></i>Perdido</span>
-            <h6 class="card-title">Calculadora científica</h6>
-            <p class="card-text">Casio FX-82MS. Sumiu depois da aula de matemática, bloco C.</p>
-          </div>
-          <div class="card-footer">
-            <div>
-              <div class="meta-info"><i class="bi bi-geo-alt"></i> Bloco C</div>
-              <div class="meta-info mt-1"><i class="bi bi-clock"></i> há 4 dias</div>
-            </div>
-            <a href="https://wa.me/?text=Vi+esse+item+no+IFIND" target="_blank" class="btn-whatsapp">
-              <i class="bi bi-whatsapp"></i> Contato
-            </a>
-          </div>
-        </div>
-      </div>
+      @endforelse
     </div>
 
     <!-- Paginação -->
-    <div class="d-flex justify-content-center mt-5">
-      <nav>
-        <ul class="pagination">
-          <li class="page-item disabled"><a class="page-link" href="#">‹</a></li>
-          <li class="page-item active"><a class="page-link" href="#" style="background:var(--if-green); border-color:var(--if-green);">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item"><a class="page-link" href="#">›</a></li>
-        </ul>
-      </nav>
-    </div>
+    @if ($posts->hasPages())
+      <div class="d-flex justify-content-center mt-5">
+        {{ $posts->links() }}
+      </div>
+    @endif
   </div>
 
   <!-- FOOTER -->
