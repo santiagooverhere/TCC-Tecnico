@@ -10,51 +10,75 @@ use App\Http\Requests\UpdatePostRequest;
 
 class PostController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StorePostRequest $request)
     {
-        Post::create($request->validated());
+        $dados = $request->validated();
+        unset($dados['imagem']);
+
+        if (! $request->user()->is_admin) {
+            $dados['users_id'] = $request->user()->id;
+        }
+
+        $dados['imagemurl'] = $request->file('imagem')->store('posts', 'public');
+
+        Post::create($dados);
+
+        $destino = $request->user()->is_admin ? 'admin.dashboard' : 'dashboard';
         return redirect()
-            ->route('admin.dashboard')
+            ->route($destino)
             ->with('success', 'Post criado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Post $post)
     {
         $post->load(['user', 'comentarios']);
         return view('posts.show', compact('post'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->update($request->validated());
+        if (! $request->user()->is_admin && $request->user()->id !== $post->users_id) {
+            abort(403, 'Você só pode editar seus próprios posts.');
+        }
+
+        $dados = $request->validated();
+        unset($dados['imagem']);
+
+        if (! $request->user()->is_admin) {
+            $dados['users_id'] = $post->users_id;
+        }
+
+        if ($request->hasFile('imagem')) {
+            $dados['imagemurl'] = $request->file('imagem')->store('posts', 'public');
+        }
+
+        $post->update($dados);
+
+        $destino = $request->user()->is_admin ? 'admin.dashboard' : 'dashboard';
         return redirect()
-            ->route('admin.dashboard')
+            ->route($destino)
             ->with('success', 'Post atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Post $post)
+    public function destroy(Request $request, Post $post)
     {
-        $post->delete(); // soft delete
+        if (! $request->user()->is_admin) {
+            abort(403, 'Apenas administradores podem excluir posts.');
+        }
+
+        $post->delete();
+
         return redirect()
             ->route('admin.dashboard')
             ->with('success', 'Post removido com sucesso!');
     }
 
-
-    public function resolver(Post $post)
+    public function resolver(Request $request, Post $post)
     {
+        if (! $request->user()->is_admin && $request->user()->id !== $post->users_id) {
+            abort(403, 'Você só pode marcar seus próprios posts como devolvidos.');
+        }
+
         $post->update(['data_devolvida' => now()]);
         return redirect()
             ->back()

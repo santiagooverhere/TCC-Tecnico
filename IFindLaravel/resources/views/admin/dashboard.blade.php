@@ -460,7 +460,7 @@
           <div class="modal fade" id="modalEditarPost{{ $post->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-                <form action="{{ route('posts.update', $post) }}" method="POST">
+                <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
                   @csrf
                   @method('PUT')
                   <input type="hidden" name="_modal_target" value="modalEditarPost{{ $post->id }}">
@@ -509,12 +509,16 @@
                   <td><span class="badge" style="background:var(--if-green-dim);color:var(--if-green);font-size:.72rem;">{{ $user->posts_count }} {{ Str::plural('post', $user->posts_count) }}</span></td>
                   <td>
                     <div class="d-flex gap-1">
-                      <button type="button" class="btn-action btn-resolve" data-bs-toggle="modal" data-bs-target="#modalEditarAluno{{ $user->id }}">Editar</button>
-                      <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Remover este aluno?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn-action btn-delete">Remover</button>
-                      </form>
+                      @if ($user->is_admin)
+                        <span class="badge" style="background:#6a1b9a;font-size:.72rem;">Administrador</span>
+                      @else
+                        <button type="button" class="btn-action btn-resolve" data-bs-toggle="modal" data-bs-target="#modalEditarAluno{{ $user->id }}">Editar</button>
+                        <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Remover este aluno?')">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="btn-action btn-delete">Remover</button>
+                        </form>
+                      @endif
                     </div>
                   </td>
                 </tr>
@@ -534,6 +538,7 @@
           </div>
 
           @foreach ($users as $user)
+          @continue($user->is_admin)
           <div class="modal fade" id="modalEditarAluno{{ $user->id }}" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -576,7 +581,7 @@
                 @forelse ($comentarios as $comentario)
                 <tr>
                   <td>{{ $comentario->user->name ?? '—' }}</td>
-                  <td>{{ $comentario->post->titulo ?? '—' }}</td>
+                  <td>{{ $comentario->post->nome_item ?? '—' }}</td>
                   <td>{{ $comentario->name_user }}</td>
                   <td>{{ Str::limit($comentario->texto, 50) }}</td>
                   <td>
@@ -642,7 +647,7 @@
 <div class="modal fade" id="modalNovoPost" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form action="{{ route('posts.store') }}" method="POST">
+      <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="_modal_target" value="modalNovoPost">
         <div class="modal-header">

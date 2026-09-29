@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -11,7 +12,6 @@ class AuthController extends Controller
     {
         $query = Post::with('user')->latest();
 
-        // Busca por texto
         if ($request->filled('busca')) {
             $termo = $request->input('busca');
             $query->where(function ($q) use ($termo) {
@@ -20,8 +20,7 @@ class AuthController extends Controller
             });
         }
 
-        // Filtro por status
-        if ($request->input('tipo') === 'achado') {
+        if ($request->input('tipo') === 'perdido') {
             $query->whereNull('data_devolvida');
         } elseif ($request->input('tipo') === 'devolvido') {
             $query->whereNotNull('data_devolvida');
@@ -33,6 +32,7 @@ class AuthController extends Controller
             'posts'           => $posts,
             'totalPosts'      => Post::count(),
             'totalDevolvidos' => Post::whereNotNull('data_devolvida')->count(),
+            'totalAlunos'     => User::where('is_admin', false)->count(),
         ]);
     }
 }

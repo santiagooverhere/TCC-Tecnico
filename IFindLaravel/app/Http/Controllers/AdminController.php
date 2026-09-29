@@ -22,7 +22,7 @@ class AdminController extends Controller
 
 
             'allUsers' => User::orderBy('name')->get(),
-            'allPosts' => Post::orderBy('titulo')->get(),
+            'allPosts' => Post::orderBy('nome_item')->get(),
         ]);
     }
 }

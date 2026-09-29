@@ -282,7 +282,7 @@
           <div class="d-flex gap-3 mt-4 flex-wrap">
             <div class="d-flex align-items-center gap-2 text-white-50">
               <i class="bi bi-people-fill fs-5 text-white"></i>
-              <span style="font-size:.9rem;">+320 alunos cadastrados</span>
+              <span style="font-size:.9rem;">{{ $totalAlunos }} {{ Str::plural('aluno cadastrado', $totalAlunos) }}</span>
             </div>
             <div class="d-flex align-items-center gap-2 text-white-50">
               <i class="bi bi-bag-check-fill fs-5 text-white"></i>
@@ -308,7 +308,7 @@
             <label class="form-label fw-600 small mb-1">Tipo</label>
             <select name="tipo" class="form-select">
               <option value="" @selected(request('tipo') === null || request('tipo') === '')>Todos</option>
-              <option value="achado" @selected(request('tipo') === 'achado')>Achado</option>
+              <option value="perdido" @selected(request('tipo') === 'perdido')>Perdido</option>
               <option value="devolvido" @selected(request('tipo') === 'devolvido')>Devolvido</option>
             </select>
           </div>
@@ -343,6 +343,11 @@
         <span class="section-title">Publicações recentes</span>
         <span class="badge-count">{{ $totalPosts }} {{ Str::plural('item', $totalPosts) }}</span>
       </div>
+      @auth
+        <button type="button" class="btn btn-search" data-bs-toggle="modal" data-bs-target="#modalNovoPostPublico">
+          <i class="bi bi-plus-lg me-1"></i> Novo Post
+        </button>
+      @endauth
     </div>
 
     <div class="row g-4">
@@ -354,7 +359,7 @@
               @if ($post->data_devolvida)
                 <span class="tag-tipo tag-achado mb-2 d-inline-block"><i class="bi bi-check-circle-fill me-1"></i>Devolvido</span>
               @else
-                <span class="tag-tipo tag-perdido mb-2 d-inline-block"><i class="bi bi-exclamation-circle-fill me-1"></i>Achado</span>
+                <span class="tag-tipo tag-perdido mb-2 d-inline-block"><i class="bi bi-exclamation-circle-fill me-1"></i>Perdido</span>
               @endif
               <h6 class="card-title">{{ $post->nome_item }}</h6>
               <p class="card-text">{{ Str::limit($post->descricao ?? '', 90) ?: 'Sem descrição.' }}</p>
@@ -370,8 +375,53 @@
                 </a>
               @endif
             </div>
+            @auth
+              @if (auth()->id() === $post->users_id)
+                <div class="card-footer border-top-0 pt-0 d-flex gap-2">
+                  <button type="button" class="btn btn-sm btn-outline-secondary flex-fill" data-bs-toggle="modal" data-bs-target="#modalEditarPostPublico{{ $post->id }}">
+                    <i class="bi bi-pencil-fill"></i> Editar
+                  </button>
+                  @unless ($post->data_devolvida)
+                    <form action="{{ route('posts.resolver', $post) }}" method="POST" class="flex-fill">
+                      @csrf
+                      @method('PATCH')
+                      <button type="submit" class="btn btn-sm btn-outline-success w-100">
+                        <i class="bi bi-check-circle-fill"></i> Devolvido
+                      </button>
+                    </form>
+                  @endunless
+                </div>
+              @endif
+            @endauth
           </div>
         </div>
+
+        @auth
+          @if (auth()->id() === $post->users_id)
+            <div class="modal fade" id="modalEditarPostPublico{{ $post->id }}" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <input type="hidden" name="users_id" value="{{ $post->users_id }}">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Editar Post</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      @include('posts._form', ['post' => $post, 'publico' => true])
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="submit" class="btn btn-primary">Salvar alterações</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          @endif
+        @endauth
       @empty
         <div class="col-12">
           <div class="text-center text-white-50 py-5">
@@ -408,6 +458,30 @@
       </div>
     </div>
   </footer>
+
+  @auth
+  <div class="modal fade" id="modalNovoPostPublico" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="users_id" value="{{ auth()->id() }}">
+          <div class="modal-header">
+            <h5 class="modal-title">Novo Post</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            @include('posts._form', ['publico' => true, 'post' => null])
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-success">Publicar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  @endauth
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 
-@section('title', $post->titulo . ' — IFIND Admin')
+@section('title', $post->nome_item . ' — IFIND Admin')
 
 @section('content')
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>{{ $post->titulo }}</h1>
+        <h1>{{ $post->nome_item }}</h1>
         <div class="d-flex gap-2">
             <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-primary">Editar</a>
             <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary">Voltar</a>

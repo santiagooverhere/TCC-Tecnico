@@ -243,10 +243,17 @@
         @endif
 
         @if ($errors->any())
-          <div class="alert alert-danger py-2 small">
-            @foreach ($errors->all() as $error)
-              <div>{{ $error }}</div>
-            @endforeach
+          <div class="alert alert-danger py-2 small d-flex align-items-center gap-2">
+            <i class="bi bi-exclamation-circle-fill"></i>
+            <div>
+              @if ($errors->has('email') || $errors->has('password'))
+                Usuário ou senha incorretos.
+              @else
+                @foreach ($errors->all() as $error)
+                  <div>{{ $error }}</div>
+                @endforeach
+              @endif
+            </div>
           </div>
         @endif
 

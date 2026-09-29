@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreUserRequest $request)
     {
         User::create([
@@ -26,20 +23,20 @@ class UserController extends Controller
             ->with('success', 'Usuário criado com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(User $user)
     {
         $user->loadCount('posts');
         return view('users.show', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateUserRequest $request, User $user)
     {
+        if ($user->is_admin) {
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('error', 'Não é possível editar a conta de administrador.');
+        }
+
         $data = [
             'name'  => $request->name,
             'email' => $request->email,
@@ -53,11 +50,14 @@ class UserController extends Controller
             ->with('success', 'Usuário atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(User $user)
     {
+        if ($user->is_admin) {
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('error', 'Não é possível excluir a conta de administrador.');
+        }
+
         if ($user->posts()->exists()) {
             return redirect()
                 ->route('admin.dashboard')

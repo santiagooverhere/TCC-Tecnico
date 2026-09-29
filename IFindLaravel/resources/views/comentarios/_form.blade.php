@@ -15,7 +15,7 @@
     <select name="post_id" class="form-select @error('post_id') is-invalid @enderror">
         <option value="">Selecione...</option>
         @foreach ($posts as $post)
-            <option value="{{ $post->id }}" @selected(old('post_id') == $post->id)>{{ $post->titulo }}</option>
+            <option value="{{ $post->id }}" @selected(old('post_id') == $post->id)>{{ $post->nome_item }}</option>
         @endforeach
     </select>
     @error('post_id') <div class="invalid-feedback">{{ $message }}</div> @enderror

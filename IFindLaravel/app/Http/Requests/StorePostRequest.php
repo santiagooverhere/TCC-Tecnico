@@ -7,25 +7,16 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StorePostRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            'titulo'          => ['required', 'string', 'max:50'],
             'descricao'       => ['nullable', 'string'],
-            'imagemurl'       => ['required', 'string'],
+            'imagem'          => ['required', 'image', 'max:4096'],
             'nome_item'       => ['required', 'string', 'max:100'],
             'data_encontrada' => ['nullable', 'date'],
             'data_devolvida'  => ['nullable', 'date'],
@@ -33,12 +24,14 @@ class StorePostRequest extends FormRequest
         ];
     }
 
-        public function messages(): array
+    public function messages(): array
     {
         return [
-            'titulo.required'   => 'O título é obrigatório.',
-            'users_id.required' => 'Selecione o usuário autor do post.',
-            'users_id.exists'   => 'Usuário inválido.',
+            'imagem.required'    => 'A imagem do item é obrigatória.',
+            'imagem.image'       => 'O arquivo enviado precisa ser uma imagem.',
+            'imagem.max'         => 'A imagem não pode passar de 4MB.',
+            'users_id.required'  => 'Selecione o usuário autor do post.',
+            'users_id.exists'    => 'Usuário inválido.',
         ];
     }
 }
