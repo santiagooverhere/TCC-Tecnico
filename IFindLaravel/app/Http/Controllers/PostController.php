@@ -37,8 +37,8 @@ class PostController extends Controller
 
     public function update(UpdatePostRequest $request, Post $post)
     {
-        if (! $request->user()->is_admin && $request->user()->id !== $post->users_id) {
-            abort(403, 'Você só pode editar seus próprios posts.');
+        if (! $request->user()->is_admin && ($request->user()->id !== $post->users_id || $post->data_devolvida)) {
+            abort(403, 'Não é possível editar um post já devolvido.');
         }
 
         $dados = $request->validated();

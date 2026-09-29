@@ -368,7 +368,7 @@
               <div>
                 <div class="meta-info"><i class="bi bi-clock"></i> {{ $post->data_encontrada?->diffForHumans() ?? '—' }}</div>
               </div>
-              @if ($post->user && $post->user->email)
+              @if ($post->user && $post->user->email && auth()->id() !== $post->users_id)
                 <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to={{ urlencode($post->user->email) }}&su={{ urlencode('IFIND - Sobre o item: ' . $post->nome_item) }}&body={{ urlencode("Olá! Vi seu post sobre \"{$post->nome_item}\" no IFIND e gostaria de falar sobre isso.") }}&tf=cm"
                    target="_blank" class="btn-gmail">
                   <i class="bi bi-envelope-fill"></i> Contato
@@ -376,20 +376,18 @@
               @endif
             </div>
             @auth
-              @if (auth()->id() === $post->users_id)
+              @if (auth()->id() === $post->users_id && ! $post->data_devolvida)
                 <div class="card-footer border-top-0 pt-0 d-flex gap-2">
                   <button type="button" class="btn btn-sm btn-outline-secondary flex-fill" data-bs-toggle="modal" data-bs-target="#modalEditarPostPublico{{ $post->id }}">
                     <i class="bi bi-pencil-fill"></i> Editar
                   </button>
-                  @unless ($post->data_devolvida)
-                    <form action="{{ route('posts.resolver', $post) }}" method="POST" class="flex-fill">
-                      @csrf
-                      @method('PATCH')
-                      <button type="submit" class="btn btn-sm btn-outline-success w-100">
-                        <i class="bi bi-check-circle-fill"></i> Devolvido
-                      </button>
-                    </form>
-                  @endunless
+                  <form action="{{ route('posts.resolver', $post) }}" method="POST" class="flex-fill">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-sm btn-outline-success w-100">
+                      <i class="bi bi-check-circle-fill"></i> Devolvido
+                    </button>
+                  </form>
                 </div>
               @endif
             @endauth
@@ -397,7 +395,7 @@
         </div>
 
         @auth
-          @if (auth()->id() === $post->users_id)
+          @if (auth()->id() === $post->users_id && ! $post->data_devolvida)
             <div class="modal fade" id="modalEditarPostPublico{{ $post->id }}" tabindex="-1" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
