@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../theme/app_theme.dart';
 
 class SplashInicial extends StatefulWidget{
   const SplashInicial({super.key});
@@ -12,31 +13,49 @@ class _SplashInicialState extends State<SplashInicial> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 4), () {
+    Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/login');
     });
-  } //initState
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.primaryDark,
       body: Center(
         child: Column(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.search, size: 80, color: Colors.green[900]),
-            SizedBox(height: 20),
-            Text("Carregando...",
-            style: TextStyle(
-              color: Colors.green[900],
-              fontSize: 24,
-              )
+            Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: const Icon(Icons.search, size: 52, color: AppColors.primary),
             ),
-            SizedBox(height: 10),
-            CircularProgressIndicator(color: Colors.white)
+            const SizedBox(height: 24),
+            const Text(
+              "IFIND",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Achados e Perdidos",
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
+            ),
+            const SizedBox(height: 32),
+            const CircularProgressIndicator(color: AppColors.accent),
           ],
         )
       ),
     );
-  } //build
+  }
 }

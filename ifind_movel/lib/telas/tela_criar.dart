@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../db/database_helper.dart';
 import '../models/post_model.dart';
+import '../theme/app_theme.dart';
 
 class TelaCriar extends StatefulWidget{
   const TelaCriar({super.key});
@@ -25,7 +26,6 @@ class _TelaCriarState extends State<TelaCriar> {
     super.dispose();
   }
 
-  // Salva o item no banco local9
   Future<void> _salvarItem() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -61,15 +61,12 @@ class _TelaCriarState extends State<TelaCriar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[800],
+      backgroundColor: AppColors.primaryDark,
       appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        title: const Text("Achados e Perdidos", style: TextStyle(color: Colors.white)),
-        centerTitle: true,
+        title: const Text("Novo item"),
       ),
-
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -78,91 +75,51 @@ class _TelaCriarState extends State<TelaCriar> {
                 controller: _tituloController,
                 validator: (valor) =>
                     (valor == null || valor.trim().isEmpty) ? 'Informe o título' : null,
-
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Título',
-                  labelStyle: const TextStyle(color: Colors.white),
-                  prefixIcon: const Icon(Icons.title, color: Colors.white),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  prefixIcon: Icon(Icons.title),
                 ),
               ),
-
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
               TextFormField(
                 controller: _descricaoController,
                 validator: (valor) =>
                     (valor == null || valor.trim().isEmpty) ? 'Informe a descrição' : null,
-
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                maxLines: 3,
+                decoration: const InputDecoration(
                   labelText: 'Descrição',
-                  labelStyle: const TextStyle(color: Colors.white),
-                  prefixIcon: const Icon(Icons.description, color: Colors.white),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  prefixIcon: Icon(Icons.description),
                 ),
               ),
-
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
               TextFormField(
                 controller: _nomeItemController,
                 validator: (valor) =>
                     (valor == null || valor.trim().isEmpty) ? 'Informe o nome do item' : null,
-
                 style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Nome do item',
-                  labelStyle: const TextStyle(color: Colors.white),
-                  prefixIcon: const Icon(Icons.category, color: Colors.white),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                  prefixIcon: Icon(Icons.category_outlined),
                 ),
               ),
+              const SizedBox(height: 28),
 
-              const SizedBox(height: 30),
-
-              ElevatedButton(
-                onPressed: _salvando ? null : _salvarItem,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green[900],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _salvando ? null : _salvarItem,
+                  child: _salvando
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Text("Finalizar"),
                 ),
-                child: _salvando
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                      )
-                    : const Text("Finalizar"),
               ),
             ],
           ),

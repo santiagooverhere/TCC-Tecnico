@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 import 'tela_criar.dart';
 import 'tela_posts.dart';
 

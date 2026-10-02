@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'theme/app_theme.dart';
 import 'telas/splash_inicial.dart';
 import 'telas/tela_login.dart';
 import 'telas/tela_cadastro.dart';
@@ -16,10 +16,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
+      title: 'IFIND',
+      theme: AppTheme.theme,
       initialRoute: '/',
       routes: {
         '/': (context) => const SplashInicial(),

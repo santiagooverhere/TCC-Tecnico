@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../theme/app_theme.dart';
 
 class SplashLogin extends StatefulWidget{
   const SplashLogin({super.key});
@@ -12,28 +13,36 @@ class _SplashLoginState extends State<SplashLogin> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.primaryDark,
       body: Center(
           child: Column(
-            mainAxisAlignment: .center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.search, size: 80, color: Colors.green[900]),
-              SizedBox(height: 20),
-              Text("Bem vindo!",
-                  style: TextStyle(
-                    color: Colors.green[900],
-                    fontSize: 24,
-                  )
+              Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: const Icon(Icons.check_circle, size: 52, color: AppColors.primary),
               ),
-              SizedBox(height: 10),
-              CircularProgressIndicator(color: Colors.white)
+              const SizedBox(height: 24),
+              const Text(
+                "Bem-vindo!",
+                style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 32),
+              const CircularProgressIndicator(color: AppColors.accent),
             ],
           )
       ),

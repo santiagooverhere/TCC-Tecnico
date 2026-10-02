@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../db/database_helper.dart';
 import '../models/post_model.dart';
+import '../theme/app_theme.dart';
+import 'tela_comentarios.dart';
 
 class TelaPosts extends StatefulWidget{
   const TelaPosts({super.key});
@@ -31,11 +33,8 @@ class _TelaPostsState extends State<TelaPosts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green[800],
       appBar: AppBar(
-        backgroundColor: Colors.green[900],
-        title: const Text("Achados e Perdidos", style: TextStyle(color: Colors.white)),
-        centerTitle: true,
+        title: const Text("Achados e Perdidos"),
       ),
       body: RefreshIndicator(
         onRefresh: _recarregar,
@@ -50,7 +49,7 @@ class _TelaPostsState extends State<TelaPosts> {
               return Center(
                 child: Text(
                   'Erro ao carregar itens: ${snapshot.error}',
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: AppColors.textMuted),
                 ),
               );
             }
@@ -67,7 +66,7 @@ class _TelaPostsState extends State<TelaPosts> {
                       child: Text(
                         'Nenhum item cadastrado ainda.\nToque em "Criar" para adicionar.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.textMuted),
                       ),
                     ),
                   ),
@@ -76,61 +75,104 @@ class _TelaPostsState extends State<TelaPosts> {
             }
 
             return ListView.builder(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(12.0),
               itemCount: posts.length,
               itemBuilder: (context, index) {
                 final post = posts[index];
                 final devolvido = post.dataDevolvida != null;
 
                 return Card(
-                  elevation: 3.0,
-                  color: Colors.white,
-                  child: ListTile(
-                    title: Text(post.titulo, style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Column(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${post.nomeItem} — ${post.descricao}'),
-                        Text(
-                          devolvido ? 'Devolvido' : 'Aguardando devolução',
-                          style: TextStyle(
-                            color: devolvido ? Colors.green[800] : Colors.orange[800],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 52,
+                              height: 52,
+                              decoration: BoxDecoration(
+                                color: AppColors.background,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: const Icon(Icons.image_outlined, color: AppColors.textMuted),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    post.titulo,
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    '${post.nomeItem} — ${post.descricao}',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: devolvido
+                                          ? AppColors.primary.withValues(alpha: 0.12)
+                                          : AppColors.warning.withValues(alpha: 0.12),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      devolvido ? 'Devolvido' : 'Aguardando devolução',
+                                      style: TextStyle(
+                                        color: devolvido ? AppColors.primary : AppColors.warning,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 11,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.camera_alt, color: Colors.grey),
-                    ),
-
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (!devolvido)
-                          IconButton(
-                            icon: Icon(Icons.check_circle_outline, color: Colors.green[800]),
-                            tooltip: 'Marcar como devolvido',
-                            onPressed: () async {
-                              if (post.id != null) {
-                                await DatabaseHelper.instance.marcarComoDevolvido(post.id!);
-                                await _recarregar();
-                              }
-                            },
-                          ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () async {
-                            if (post.id != null) {
-                              await DatabaseHelper.instance.excluirPost(post.id!);
-                              await _recarregar();
-                            }
-                          },
+                        const Divider(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton.icon(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => TelaComentarios(post: post)),
+                                );
+                              },
+                              icon: const Icon(Icons.chat_bubble_outline, size: 18),
+                              label: const Text('Comentários'),
+                            ),
+                            if (!devolvido)
+                              IconButton(
+                                icon: const Icon(Icons.check_circle_outline, color: AppColors.primary),
+                                tooltip: 'Marcar como devolvido',
+                                onPressed: () async {
+                                  if (post.id != null) {
+                                    await DatabaseHelper.instance.marcarComoDevolvido(post.id!);
+                                    await _recarregar();
+                                  }
+                                },
+                              ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline, color: AppColors.danger),
+                              onPressed: () async {
+                                if (post.id != null) {
+                                  await DatabaseHelper.instance.excluirPost(post.id!);
+                                  await _recarregar();
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ],
                     ),
