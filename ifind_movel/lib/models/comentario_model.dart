@@ -4,7 +4,7 @@ class Comentario {
   final int postId;
   final String nameUser;
   final String texto;
-  final String createdAt;
+  final String? createdAt;
 
   Comentario({
     this.id,
@@ -12,28 +12,17 @@ class Comentario {
     required this.postId,
     required this.nameUser,
     required this.texto,
-    required this.createdAt,
+    this.createdAt,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'users_id': usersId,
-      'post_id': postId,
-      'name_user': nameUser,
-      'texto': texto,
-      'created_at': createdAt,
-    };
-  }
-
-  factory Comentario.fromMap(Map<String, dynamic> map) {
+  factory Comentario.fromJson(Map<String, dynamic> json) {
     return Comentario(
-      id: map['id'] as int?,
-      usersId: map['users_id'] as int,
-      postId: map['post_id'] as int,
-      nameUser: map['name_user'] as String,
-      texto: map['texto'] as String,
-      createdAt: map['created_at'] as String,
+      id: json['id'] as int?,
+      usersId: json['users_id'] as int,
+      postId: json['post_id'] as int,
+      nameUser: json['name_user'] as String,
+      texto: json['texto'] as String,
+      createdAt: json['created_at'] as String?,
     );
   }
 }

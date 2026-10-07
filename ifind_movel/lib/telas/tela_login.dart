@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
+import '../services/api_service.dart';
 
 class TelaLogin extends StatefulWidget {
   const TelaLogin({super.key});
@@ -11,12 +12,34 @@ class TelaLogin extends StatefulWidget {
 class _TelaLoginState extends State<TelaLogin> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
+  bool _entrando = false;
+  String? _erro;
 
   @override
   void dispose() {
     _emailController.dispose();
     _senhaController.dispose();
     super.dispose();
+  }
+
+  Future<void> _entrar() async {
+    setState(() {
+      _entrando = true;
+      _erro = null;
+    });
+
+    try {
+      await ApiService.instance.login(
+        _emailController.text.trim(),
+        _senhaController.text,
+      );
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/splash');
+    } catch (e) {
+      setState(() => _erro = e.toString());
+    } finally {
+      if (mounted) setState(() => _entrando = false);
+    }
   }
 
   @override
@@ -39,6 +62,19 @@ class _TelaLoginState extends State<TelaLogin> {
                 child: const Icon(Icons.search, size: 40, color: AppColors.primary),
               ),
               const SizedBox(height: 32),
+
+              if (_erro != null) ...[
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.danger.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(_erro!, style: const TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(height: 14),
+              ],
 
               TextField(
                 controller: _emailController,
@@ -63,10 +99,14 @@ class _TelaLoginState extends State<TelaLogin> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/splash');
-                  },
-                  child: const Text("Entrar"),
+                  onPressed: _entrando ? null : _entrar,
+                  child: _entrando
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Text("Entrar"),
                 ),
               ),
               const SizedBox(height: 8),

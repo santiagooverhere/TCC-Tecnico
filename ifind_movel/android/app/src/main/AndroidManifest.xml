@@ -1,4 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Necessário para o image_picker em versões mais antigas do Android
+         (a partir do Android 13 o seletor de fotos do sistema não exige
+         essa permissão, mas ela é mantida para compatibilidade). -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <application
         android:label="ifind_movel"
         android:name="${applicationName}"

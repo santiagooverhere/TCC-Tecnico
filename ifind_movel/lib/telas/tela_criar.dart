@@ -1,6 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import '../db/database_helper.dart';
-import '../models/post_model.dart';
+import 'package:image_picker/image_picker.dart';
+import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 
 class TelaCriar extends StatefulWidget{
@@ -12,50 +13,59 @@ class TelaCriar extends StatefulWidget{
 
 class _TelaCriarState extends State<TelaCriar> {
   final _formKey = GlobalKey<FormState>();
-  final _tituloController = TextEditingController();
   final _descricaoController = TextEditingController();
   final _nomeItemController = TextEditingController();
 
+  XFile? _imagemSelecionada;
   bool _salvando = false;
+  String? _erro;
 
   @override
   void dispose() {
-    _tituloController.dispose();
     _descricaoController.dispose();
     _nomeItemController.dispose();
     super.dispose();
   }
 
+  Future<void> _escolherImagem() async {
+    final imagem = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85);
+    if (imagem != null) {
+      setState(() => _imagemSelecionada = imagem);
+    }
+  }
+
   Future<void> _salvarItem() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _salvando = true);
+    if (_imagemSelecionada == null) {
+      setState(() => _erro = 'Selecione uma imagem para o item.');
+      return;
+    }
 
-    final agora = DateTime.now().toIso8601String();
+    setState(() {
+      _salvando = true;
+      _erro = null;
+    });
 
-    final novoPost = Post(
-      titulo: _tituloController.text.trim(),
-      descricao: _descricaoController.text.trim(),
-      nomeItem: _nomeItemController.text.trim(),
-      dataEncontrada: agora,
-      createdAt: agora,
-    );
+    try {
+      await ApiService.instance.criarPost(
+        nomeItem: _nomeItemController.text.trim(),
+        descricao: _descricaoController.text.trim(),
+        caminhoImagem: _imagemSelecionada!.path,
+      );
 
-    await DatabaseHelper.instance.inserirPost(novoPost);
+      if (!mounted) return;
 
-    if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Item salvo com sucesso!')),
+      );
 
-    setState(() => _salvando = false);
-
-    _tituloController.clear();
-    _descricaoController.clear();
-    _nomeItemController.clear();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Item salvo com sucesso!')),
-    );
-
-    Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      setState(() => _erro = e.toString());
+    } finally {
+      if (mounted) setState(() => _salvando = false);
+    }
   }
 
   @override
@@ -71,14 +81,56 @@ class _TelaCriarState extends State<TelaCriar> {
           key: _formKey,
           child: Column(
             children: [
+              if (_erro != null) ...[
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.danger.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(_erro!, style: const TextStyle(color: Colors.white)),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              GestureDetector(
+                onTap: _escolherImagem,
+                child: Container(
+                  width: double.infinity,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white54),
+                  ),
+                  child: _imagemSelecionada == null
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_a_photo_outlined, color: Colors.white70, size: 32),
+                              SizedBox(height: 8),
+                              Text('Toque para escolher uma foto', style: TextStyle(color: Colors.white70)),
+                            ],
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.file(File(_imagemSelecionada!.path), fit: BoxFit.cover),
+                        ),
+                ),
+              ),
+              const SizedBox(height: 16),
+
               TextFormField(
-                controller: _tituloController,
+                controller: _nomeItemController,
                 validator: (valor) =>
-                    (valor == null || valor.trim().isEmpty) ? 'Informe o título' : null,
+                    (valor == null || valor.trim().isEmpty) ? 'Informe o nome do item' : null,
                 style: const TextStyle(color: Colors.white),
                 decoration: const InputDecoration(
-                  labelText: 'Título',
-                  prefixIcon: Icon(Icons.title),
+                  labelText: 'Nome do item',
+                  prefixIcon: Icon(Icons.category_outlined),
                 ),
               ),
               const SizedBox(height: 16),
@@ -92,18 +144,6 @@ class _TelaCriarState extends State<TelaCriar> {
                 decoration: const InputDecoration(
                   labelText: 'Descrição',
                   prefixIcon: Icon(Icons.description),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: _nomeItemController,
-                validator: (valor) =>
-                    (valor == null || valor.trim().isEmpty) ? 'Informe o nome do item' : null,
-                style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
-                  labelText: 'Nome do item',
-                  prefixIcon: Icon(Icons.category_outlined),
                 ),
               ),
               const SizedBox(height: 28),

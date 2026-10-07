@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../db/database_helper.dart';
 import '../models/post_model.dart';
+import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import 'tela_comentarios.dart';
 
@@ -21,7 +21,7 @@ class _TelaPostsState extends State<TelaPosts> {
   }
 
   void _carregarPosts() {
-    _postsFuture = DatabaseHelper.instance.listarPosts();
+    _postsFuture = ApiService.instance.listarPosts();
   }
 
   Future<void> _recarregar() async {
@@ -35,6 +35,17 @@ class _TelaPostsState extends State<TelaPosts> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Achados e Perdidos"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            tooltip: 'Sair',
+            onPressed: () async {
+              await ApiService.instance.logout();
+              if (!context.mounted) return;
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: _recarregar,
@@ -46,10 +57,22 @@ class _TelaPostsState extends State<TelaPosts> {
             }
 
             if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  'Erro ao carregar itens: ${snapshot.error}',
-                  style: const TextStyle(color: AppColors.textMuted),
+              return LayoutBuilder(
+                builder: (context, constraints) => SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Text(
+                          'Erro ao carregar itens:\n${snapshot.error}',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: AppColors.textMuted),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               );
             }
@@ -90,14 +113,20 @@ class _TelaPostsState extends State<TelaPosts> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 52,
-                              height: 52,
-                              decoration: BoxDecoration(
-                                color: AppColors.background,
-                                borderRadius: BorderRadius.circular(10),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                post.imagemUrl,
+                                width: 52,
+                                height: 52,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stack) => Container(
+                                  width: 52,
+                                  height: 52,
+                                  color: AppColors.background,
+                                  child: const Icon(Icons.image_outlined, color: AppColors.textMuted),
+                                ),
                               ),
-                              child: const Icon(Icons.image_outlined, color: AppColors.textMuted),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -105,12 +134,12 @@ class _TelaPostsState extends State<TelaPosts> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    post.titulo,
+                                    post.nomeItem,
                                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    '${post.nomeItem} — ${post.descricao}',
+                                    post.descricao ?? '',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
@@ -157,21 +186,18 @@ class _TelaPostsState extends State<TelaPosts> {
                                 icon: const Icon(Icons.check_circle_outline, color: AppColors.primary),
                                 tooltip: 'Marcar como devolvido',
                                 onPressed: () async {
-                                  if (post.id != null) {
-                                    await DatabaseHelper.instance.marcarComoDevolvido(post.id!);
+                                  if (post.id == null) return;
+                                  try {
+                                    await ApiService.instance.marcarComoDevolvido(post.id!);
                                     await _recarregar();
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(e.toString())),
+                                    );
                                   }
                                 },
                               ),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline, color: AppColors.danger),
-                              onPressed: () async {
-                                if (post.id != null) {
-                                  await DatabaseHelper.instance.excluirPost(post.id!);
-                                  await _recarregar();
-                                }
-                              },
-                            ),
                           ],
                         ),
                       ],

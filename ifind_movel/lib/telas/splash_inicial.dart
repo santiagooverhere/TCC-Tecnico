@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../theme/app_theme.dart';
+import '../services/api_service.dart';
 
 class SplashInicial extends StatefulWidget{
   const SplashInicial({super.key});
@@ -13,10 +14,14 @@ class _SplashInicialState extends State<SplashInicial> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/login');
-    });
+    _verificarLogin();
+  }
+
+  Future<void> _verificarLogin() async {
+    final logado = await ApiService.instance.estaLogado;
+    await Future.delayed(const Duration(seconds: 2));
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, logado ? '/home' : '/login');
   }
 
   @override

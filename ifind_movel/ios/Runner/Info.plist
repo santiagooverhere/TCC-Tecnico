@@ -24,6 +24,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>NSCameraUsageDescription</key>
+	<string>O IFIND precisa da câmera para fotografar o item encontrado.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>O IFIND precisa acessar suas fotos para anexar a imagem do item.</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>

@@ -1,61 +1,50 @@
+class Autor {
+  final int id;
+  final String name;
+  final String email;
+
+  Autor({required this.id, required this.name, required this.email});
+
+  factory Autor.fromJson(Map<String, dynamic> json) {
+    return Autor(
+      id: json['id'] as int,
+      name: json['name'] as String,
+      email: json['email'] as String,
+    );
+  }
+}
+
 class Post {
-  final int? id; // null enquanto ainda não foi salvo no banco
-  final String titulo;
-  final String descricao;
+  final int? id;
   final String nomeItem;
-  final String? imagemUrl; // caminho do arquivo da imagem
-  final String dataEncontrada; // preenchida na hora de criar
-  final String? dataDevolvida; // null até ser marcado como devolvido
-  final String createdAt;
+  final String? descricao;
+  final String imagemUrl;
+  final String? dataEncontrada;
+  final String? dataDevolvida;
+  final int? usersId;
+  final Autor? autor;
 
   Post({
     this.id,
-    required this.titulo,
-    required this.descricao,
     required this.nomeItem,
-    this.imagemUrl,
-    required this.dataEncontrada,
+    this.descricao,
+    required this.imagemUrl,
+    this.dataEncontrada,
     this.dataDevolvida,
-    required this.createdAt,
+    this.usersId,
+    this.autor,
   });
 
-  // Converte o objeto Dart em um Map pro sqlite entender
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'titulo': titulo,
-      'descricao': descricao,
-      'nome_item': nomeItem,
-      'imagem_url': imagemUrl,
-      'data_encontrada': dataEncontrada,
-      'data_devolvida': dataDevolvida,
-      'created_at': createdAt,
-    };
-  }
-
-  factory Post.fromMap(Map<String, dynamic> map) {
+  factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
-      id: map['id'] as int?,
-      titulo: map['titulo'] as String,
-      descricao: map['descricao'] as String,
-      nomeItem: map['nome_item'] as String,
-      imagemUrl: map['imagem_url'] as String?,
-      dataEncontrada: map['data_encontrada'] as String,
-      dataDevolvida: map['data_devolvida'] as String?,
-      createdAt: map['created_at'] as String,
-    );
-  }
-
-  Post copyWith({String? dataDevolvida}) {
-    return Post(
-      id: id,
-      titulo: titulo,
-      descricao: descricao,
-      nomeItem: nomeItem,
-      imagemUrl: imagemUrl,
-      dataEncontrada: dataEncontrada,
-      dataDevolvida: dataDevolvida ?? this.dataDevolvida,
-      createdAt: createdAt,
+      id: json['id'] as int?,
+      nomeItem: json['nome_item'] as String,
+      descricao: json['descricao'] as String?,
+      imagemUrl: json['imagem_url'] as String,
+      dataEncontrada: json['data_encontrada'] as String?,
+      dataDevolvida: json['data_devolvida'] as String?,
+      usersId: json['users_id'] as int?,
+      autor: json['autor'] != null ? Autor.fromJson(json['autor']) : null,
     );
   }
 }

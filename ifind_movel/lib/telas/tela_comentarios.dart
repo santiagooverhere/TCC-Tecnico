@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../db/database_helper.dart';
 import '../models/post_model.dart';
 import '../models/comentario_model.dart';
+import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 
 class TelaComentarios extends StatefulWidget {
@@ -15,11 +15,8 @@ class TelaComentarios extends StatefulWidget {
 
 class _TelaComentariosState extends State<TelaComentarios> {
   late Future<List<Comentario>> _comentariosFuture;
-  final _nomeController = TextEditingController();
   final _textoController = TextEditingController();
   bool _enviando = false;
-
-  static const int _usersIdTemporario = 1;
 
   @override
   void initState() {
@@ -28,40 +25,31 @@ class _TelaComentariosState extends State<TelaComentarios> {
   }
 
   void _carregarComentarios() {
-    _comentariosFuture = DatabaseHelper.instance.listarComentariosPorPost(widget.post.id!);
+    _comentariosFuture = ApiService.instance.listarComentarios(widget.post.id!);
   }
 
   @override
   void dispose() {
-    _nomeController.dispose();
     _textoController.dispose();
     super.dispose();
   }
 
   Future<void> _enviarComentario() async {
-    if (_nomeController.text.trim().isEmpty || _textoController.text.trim().isEmpty) {
-      return;
-    }
+    if (_textoController.text.trim().isEmpty) return;
 
     setState(() => _enviando = true);
 
-    final comentario = Comentario(
-      usersId: _usersIdTemporario,
-      postId: widget.post.id!,
-      nameUser: _nomeController.text.trim(),
-      texto: _textoController.text.trim(),
-      createdAt: DateTime.now().toIso8601String(),
-    );
-
-    await DatabaseHelper.instance.inserirComentario(comentario);
-
-    if (!mounted) return;
-
-    _textoController.clear();
-    setState(() {
-      _enviando = false;
-      _carregarComentarios();
-    });
+    try {
+      await ApiService.instance.criarComentario(widget.post.id!, _textoController.text.trim());
+      if (!mounted) return;
+      _textoController.clear();
+      setState(() => _carregarComentarios());
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } finally {
+      if (mounted) setState(() => _enviando = false);
+    }
   }
 
   @override
@@ -78,6 +66,19 @@ class _TelaComentariosState extends State<TelaComentarios> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Text(
+                        'Erro ao carregar comentários:\n${snapshot.error}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: AppColors.textMuted),
+                      ),
+                    ),
+                  );
                 }
 
                 final comentarios = snapshot.data ?? [];
@@ -130,45 +131,30 @@ class _TelaComentariosState extends State<TelaComentarios> {
                 color: AppColors.card,
                 border: Border(top: BorderSide(color: Color(0xFFE0E0E0))),
               ),
-              child: Column(
+              child: Row(
                 children: [
-                  TextField(
-                    controller: _nomeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Seu nome',
-                      isDense: true,
-                      filled: false,
-                      border: OutlineInputBorder(),
-                      enabledBorder: OutlineInputBorder(),
+                  Expanded(
+                    child: TextField(
+                      controller: _textoController,
+                      decoration: const InputDecoration(
+                        labelText: 'Escreva um comentário...',
+                        isDense: true,
+                        filled: false,
+                        border: OutlineInputBorder(),
+                        enabledBorder: OutlineInputBorder(),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _textoController,
-                          decoration: const InputDecoration(
-                            labelText: 'Escreva um comentário...',
-                            isDense: true,
-                            filled: false,
-                            border: OutlineInputBorder(),
-                            enabledBorder: OutlineInputBorder(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      IconButton.filled(
-                        onPressed: _enviando ? null : _enviarComentario,
-                        icon: _enviando
-                            ? const SizedBox(
-                                width: 18,
-                                height: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                              )
-                            : const Icon(Icons.send),
-                      ),
-                    ],
+                  const SizedBox(width: 8),
+                  IconButton.filled(
+                    onPressed: _enviando ? null : _enviarComentario,
+                    icon: _enviando
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Icon(Icons.send),
                   ),
                 ],
               ),
