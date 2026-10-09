@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+use App\Http\Requests\Api\StorePostApiRequest;
+use App\Http\Requests\Api\UpdatePostApiRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -35,15 +35,13 @@ class PostApiController extends Controller
         return PostResource::collection($posts);
     }
 
-    public function store(Request $request, StorePostRequest $storeRequest)
+    public function store(StorePostApiRequest $request)
     {
-        $storeRequest->merge(['users_id' => $request->user()->id]);
-
-        $dados = $storeRequest->validated();
+        $dados = $request->validated();
         unset($dados['imagem']);
         $dados['users_id'] = $request->user()->id;
 
-        $dados['imagemurl'] = $storeRequest->file('imagem')->store('posts', config('filesystems.imagens'));
+        $dados['imagemurl'] = $request->file('imagem')->store('posts', config('filesystems.imagens'));
 
         $post = Post::create($dados);
         $post->load('user');
@@ -57,19 +55,17 @@ class PostApiController extends Controller
         return new PostResource($post);
     }
 
-    public function update(Request $request, UpdatePostRequest $updateRequest, Post $post)
+    public function update(UpdatePostApiRequest $request, Post $post)
     {
         if (! $request->user()->is_admin && ($request->user()->id !== $post->users_id || $post->data_devolvida)) {
             abort(403, 'Não é possível editar um post já devolvido.');
         }
 
-        $updateRequest->merge(['users_id' => $post->users_id]);
-
-        $dados = $updateRequest->validated();
+        $dados = $request->validated();
         unset($dados['imagem']);
 
-        if ($updateRequest->hasFile('imagem')) {
-            $dados['imagemurl'] = $updateRequest->file('imagem')->store('posts', config('filesystems.imagens'));
+        if ($request->hasFile('imagem')) {
+            $dados['imagemurl'] = $request->file('imagem')->store('posts', config('filesystems.imagens'));
         }
 
         $post->update($dados);

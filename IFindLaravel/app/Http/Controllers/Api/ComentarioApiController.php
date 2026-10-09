@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreComentarioRequest;
+use App\Http\Requests\Api\StoreComentarioApiRequest;
 use App\Http\Resources\ComentarioResource;
 use App\Models\Comentario;
 use App\Models\Post;
@@ -17,15 +17,14 @@ class ComentarioApiController extends Controller
         return ComentarioResource::collection($comentarios);
     }
 
-    public function store(Request $request, StoreComentarioRequest $storeRequest, Post $post)
+    public function store(StoreComentarioApiRequest $request, Post $post)
     {
-        $storeRequest->merge([
+        $comentario = Comentario::create([
             'users_id'  => $request->user()->id,
             'post_id'   => $post->id,
             'name_user' => $request->user()->name,
+            'texto'     => $request->validated()['texto'],
         ]);
-
-        $comentario = Comentario::create($storeRequest->validated());
         return new ComentarioResource($comentario);
     }
 
