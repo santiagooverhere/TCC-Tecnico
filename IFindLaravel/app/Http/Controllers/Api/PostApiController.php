@@ -43,7 +43,7 @@ class PostApiController extends Controller
         unset($dados['imagem']);
         $dados['users_id'] = $request->user()->id;
 
-        $dados['imagemurl'] = $storeRequest->file('imagem')->store('posts', 'public');
+        $dados['imagemurl'] = $storeRequest->file('imagem')->store('posts', config('filesystems.imagens'));
 
         $post = Post::create($dados);
         $post->load('user');
@@ -69,7 +69,7 @@ class PostApiController extends Controller
         unset($dados['imagem']);
 
         if ($updateRequest->hasFile('imagem')) {
-            $dados['imagemurl'] = $updateRequest->file('imagem')->store('posts', 'public');
+            $dados['imagemurl'] = $updateRequest->file('imagem')->store('posts', config('filesystems.imagens'));
         }
 
         $post->update($dados);

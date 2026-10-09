@@ -1,0 +1,19 @@
+kind: wasmer.io/App.v0
+name: ifind
+owner: santiagooverhere
+package: .
+env:
+  APP_ENV: staging
+  APP_DEBUG: "true"
+  APP_KEY: "base64:7gCJ6o6ItksjrWQ/GB67b5bRqWHIii1tEQt+f2Mk8ik="
+  DB_CONNECTION: mysql
+  SESSION_DRIVER: database
+  CACHE_STORE: database
+  QUEUE_CONNECTION: sync
+  LOG_CHANNEL: stderr
+capabilities:
+  database:
+    engine: mysql
+locality:
+  regions:
+    - us-losa1

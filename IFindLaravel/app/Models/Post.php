@@ -29,7 +29,7 @@ class Post extends Model
     public function getImagemExibicaoAttribute(): string
     {
         if ($this->imagemurl) {
-            return Storage::url($this->imagemurl);
+            return Storage::disk(config('filesystems.imagens'))->url($this->imagemurl);
         }
         return 'https://placehold.co/400x200/e8f5ee/007A3D?text=IFIND';
     }

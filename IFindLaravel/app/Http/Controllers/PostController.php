@@ -19,7 +19,7 @@ class PostController extends Controller
             $dados['users_id'] = $request->user()->id;
         }
 
-        $dados['imagemurl'] = $request->file('imagem')->store('posts', 'public');
+        $dados['imagemurl'] = $request->file('imagem')->store('posts', config('filesystems.imagens'));
 
         Post::create($dados);
 
@@ -49,7 +49,7 @@ class PostController extends Controller
         }
 
         if ($request->hasFile('imagem')) {
-            $dados['imagemurl'] = $request->file('imagem')->store('posts', 'public');
+            $dados['imagemurl'] = $request->file('imagem')->store('posts', config('filesystems.imagens'));
         }
 
         $post->update($dados);
