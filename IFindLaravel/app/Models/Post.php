@@ -29,6 +29,12 @@ class Post extends Model
     public function getImagemExibicaoAttribute(): string
     {
         if ($this->imagemurl) {
+            if (config('filesystems.imagens') === 'cloudinary') {
+                $info = pathinfo($this->imagemurl);
+
+                return (string) cloudinary()->image($info['dirname'].'/'.$info['filename'])->toUrl();
+            }
+
             return Storage::disk(config('filesystems.imagens'))->url($this->imagemurl);
         }
         return 'https://placehold.co/400x200/e8f5ee/007A3D?text=IFIND';
