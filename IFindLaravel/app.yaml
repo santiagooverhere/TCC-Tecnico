@@ -11,6 +11,8 @@ env:
   CACHE_STORE: database
   QUEUE_CONNECTION: sync
   LOG_CHANNEL: stderr
+  IMAGENS_DISK: cloudinary
+  CLOUDINARY_URL: cloudinary://381494497971891:zRr2FNQqb6rC06hN-FLn0QS2Q1Q@forwbkyk
 capabilities:
   database:
     engine: mysql
