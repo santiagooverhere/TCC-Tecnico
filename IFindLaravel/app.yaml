@@ -1,5 +1,5 @@
 kind: wasmer.io/App.v0
-name: ifind
+name: ifind-tcc
 owner: santiagooverhere
 package: .
 env:
