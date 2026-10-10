@@ -18,7 +18,7 @@ class _SplashInicialState extends State<SplashInicial> {
   }
 
   Future<void> _verificarLogin() async {
-    final logado = await ApiService.instance.estaLogado;
+    final logado = await ApiService.instance.sessaoValida();
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, logado ? '/home' : '/login');

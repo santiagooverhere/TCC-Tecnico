@@ -47,78 +47,91 @@ class _TelaLoginState extends State<TelaLogin> {
     return Scaffold(
       backgroundColor: AppColors.primaryDark,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: 72,
-                height: 72,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: const Icon(Icons.search, size: 40, color: AppColors.primary),
-              ),
-              const SizedBox(height: 32),
-
-              if (_erro != null) ...[
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.danger.withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(10),
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight - 48),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: const Icon(Icons.search, size: 40, color: AppColors.primary),
                   ),
-                  child: Text(_erro!, style: const TextStyle(color: Colors.white)),
-                ),
-                const SizedBox(height: 14),
-              ],
+                  const SizedBox(height: 32),
 
-              TextField(
-                controller: _emailController,
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'E-mail',
-                  prefixIcon: Icon(Icons.email_outlined),
-                ),
-              ),
-              const SizedBox(height: 14),
+                  if (_erro != null) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.danger.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Text(_erro!, style: const TextStyle(color: Colors.white)),
+                    ),
+                    const SizedBox(height: 14),
+                  ],
 
-              TextField(
-                controller: _senhaController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Senha',
-                  prefixIcon: Icon(Icons.lock_outline),
-                ),
-              ),
-              const SizedBox(height: 24),
+                  TextField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      labelText: 'E-mail',
+                      prefixIcon: Icon(Icons.email_outlined),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
 
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _entrando ? null : _entrar,
-                  child: _entrando
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                        )
-                      : const Text("Entrar"),
-                ),
-              ),
-              const SizedBox(height: 8),
+                  TextField(
+                    controller: _senhaController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Senha',
+                      prefixIcon: Icon(Icons.lock_outline),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
-              TextButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/cadastro');
-                },
-                style: TextButton.styleFrom(foregroundColor: Colors.white70),
-                child: const Text("Não tem uma conta? Cadastre-se"),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _entrando ? null : _entrar,
+                      child: _entrando
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                            )
+                          : const Text("Entrar"),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/esqueci-senha');
+                    },
+                    style: TextButton.styleFrom(foregroundColor: Colors.white70),
+                    child: const Text("Esqueceu a senha?"),
+                  ),
+
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/cadastro');
+                    },
+                    style: TextButton.styleFrom(foregroundColor: Colors.white70),
+                    child: const Text("Não tem uma conta? Cadastre-se"),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

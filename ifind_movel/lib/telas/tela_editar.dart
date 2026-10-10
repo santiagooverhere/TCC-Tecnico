@@ -1,26 +1,38 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import '../models/post_model.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/seletor_data_hora.dart';
 
-class TelaCriar extends StatefulWidget{
-  const TelaCriar({super.key});
+class TelaEditar extends StatefulWidget {
+  final Post post;
+
+  const TelaEditar({super.key, required this.post});
 
   @override
-  State<TelaCriar> createState() => _TelaCriarState();
+  State<TelaEditar> createState() => _TelaEditarState();
 }
 
-class _TelaCriarState extends State<TelaCriar> {
+class _TelaEditarState extends State<TelaEditar> {
   final _formKey = GlobalKey<FormState>();
-  final _descricaoController = TextEditingController();
-  final _nomeItemController = TextEditingController();
+  late final TextEditingController _descricaoController;
+  late final TextEditingController _nomeItemController;
+  late DateTime _dataEncontrada;
 
-  XFile? _imagemSelecionada;
-  DateTime _dataEncontrada = DateTime.now();
+  XFile? _novaImagem;
   bool _salvando = false;
   String? _erro;
+
+  @override
+  void initState() {
+    super.initState();
+    _descricaoController = TextEditingController(text: widget.post.descricao ?? '');
+    _nomeItemController = TextEditingController(text: widget.post.nomeItem);
+    final data = DateTime.tryParse(widget.post.dataEncontrada ?? '')?.toLocal();
+    _dataEncontrada = (data == null || data.isAfter(DateTime.now())) ? DateTime.now() : data;
+  }
 
   @override
   void dispose() {
@@ -30,19 +42,18 @@ class _TelaCriarState extends State<TelaCriar> {
   }
 
   Future<void> _escolherImagem() async {
-    final imagem = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85, maxWidth: 1600);
+    final imagem = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+      maxWidth: 1600,
+    );
     if (imagem != null) {
-      setState(() => _imagemSelecionada = imagem);
+      setState(() => _novaImagem = imagem);
     }
   }
 
-  Future<void> _salvarItem() async {
+  Future<void> _salvar() async {
     if (!_formKey.currentState!.validate()) return;
-
-    if (_imagemSelecionada == null) {
-      setState(() => _erro = 'Selecione uma imagem para o item.');
-      return;
-    }
 
     setState(() {
       _salvando = true;
@@ -50,20 +61,21 @@ class _TelaCriarState extends State<TelaCriar> {
     });
 
     try {
-      await ApiService.instance.criarPost(
+      await ApiService.instance.editarPost(
+        widget.post.id!,
         nomeItem: _nomeItemController.text.trim(),
         descricao: _descricaoController.text.trim(),
-        caminhoImagem: _imagemSelecionada!.path,
         dataEncontrada: _dataEncontrada,
+        caminhoImagem: _novaImagem?.path,
       );
 
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Item salvo com sucesso!')),
+        const SnackBar(content: Text('Item atualizado com sucesso!')),
       );
 
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pop(context, true);
     } catch (e) {
       setState(() => _erro = e.toString());
     } finally {
@@ -76,7 +88,7 @@ class _TelaCriarState extends State<TelaCriar> {
     return Scaffold(
       backgroundColor: AppColors.primaryDark,
       appBar: AppBar(
-        title: const Text("Novo item"),
+        title: const Text("Editar item"),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -101,27 +113,48 @@ class _TelaCriarState extends State<TelaCriar> {
                 onTap: _escolherImagem,
                 child: Container(
                   width: double.infinity,
-                  height: 160,
+                  height: 200,
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.white54),
                   ),
-                  child: _imagemSelecionada == null
-                      ? const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add_a_photo_outlined, color: Colors.white70, size: 32),
-                              SizedBox(height: 8),
-                              Text('Toque para escolher uma foto', style: TextStyle(color: Colors.white70)),
-                            ],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _novaImagem == null
+                            ? Image.network(
+                                widget.post.imagemUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stack) => const Center(
+                                  child: Icon(Icons.image_outlined, color: Colors.white70, size: 40),
+                                ),
+                              )
+                            : Image.file(File(_novaImagem!.path), fit: BoxFit.cover),
+                        Positioned(
+                          right: 8,
+                          bottom: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.black54,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.edit, color: Colors.white, size: 14),
+                                SizedBox(width: 6),
+                                Text('Trocar foto', style: TextStyle(color: Colors.white, fontSize: 12)),
+                              ],
+                            ),
                           ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.file(File(_imagemSelecionada!.path), fit: BoxFit.cover),
                         ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -160,14 +193,14 @@ class _TelaCriarState extends State<TelaCriar> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _salvando ? null : _salvarItem,
+                  onPressed: _salvando ? null : _salvar,
                   child: _salvando
                       ? const SizedBox(
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                         )
-                      : const Text("Finalizar"),
+                      : const Text("Salvar alterações"),
                 ),
               ),
             ],

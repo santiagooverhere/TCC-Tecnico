@@ -21,7 +21,7 @@ class Comentario {
       usersId: json['users_id'] as int,
       postId: json['post_id'] as int,
       nameUser: json['name_user'] as String,
-      texto: json['texto'] as String,
+      texto: (json['texto'] as String?) ?? '',
       createdAt: json['created_at'] as String?,
     );
   }

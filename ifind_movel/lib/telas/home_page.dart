@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _telas[_indiceAtual],
+      body: IndexedStack(index: _indiceAtual, children: _telas),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceAtual,
         items: const[
