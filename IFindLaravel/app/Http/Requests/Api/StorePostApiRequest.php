@@ -17,6 +17,7 @@ class StorePostApiRequest extends FormRequest
             'descricao' => ['nullable', 'string'],
             'imagem'    => ['required', 'image', 'max:4096'],
             'nome_item' => ['required', 'string', 'max:100'],
+            'data_encontrada' => ['nullable', 'date'],
         ];
     }
 

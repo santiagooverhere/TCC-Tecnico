@@ -17,6 +17,7 @@ class UpdatePostApiRequest extends FormRequest
             'descricao' => ['nullable', 'string'],
             'imagem'    => ['nullable', 'image', 'max:4096'],
             'nome_item' => ['required', 'string', 'max:100'],
+            'data_encontrada' => ['nullable', 'date'],
         ];
     }
 

@@ -448,7 +448,7 @@
         </div>
         <div class="col-md-4 text-md-center">
           <small>Dúvidas? Fale com a administração</small><br />
-          <a href="mailto:ifind@ifmg.edu.br">ifind@ifmg.edu.br</a>
+          <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to=ifind.ifmg%40gmail.com&su={{ urlencode('IFIND - Contato') }}&tf=cm" target="_blank" rel="noopener">ifind.ifmg@gmail.com</a>
         </div>
         <div class="col-md-4 text-md-end">
           <small>© 2026 IFIND · Todos os direitos reservados</small>

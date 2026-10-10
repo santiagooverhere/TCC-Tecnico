@@ -118,25 +118,6 @@
     .input-group .btn-eye:hover { color: var(--if-green); }
     .form-text { font-size: .78rem; color: #999; margin-top: 4px; }
 
-    /* Avatar upload */
-    .avatar-upload {
-      width: 90px; height: 90px;
-      border-radius: 50%;
-      background: var(--if-green-dim);
-      border: 2px dashed var(--if-green);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: .7rem;
-      color: var(--if-green);
-      font-weight: 600;
-      gap: 4px;
-      transition: background .2s;
-    }
-    .avatar-upload:hover { background: #d4edde; }
-
     /* Password strength */
     .strength-bar {
       height: 4px;
@@ -238,7 +219,7 @@
         <p style="color:#888; font-size:.9rem; margin:0;">Preencha os dados abaixo para se cadastrar. Levará menos de 2 minutos.</p>
       </div>
 
-      <form action="{{ route('register') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('register') }}" method="POST">
         @csrf
 
         @if ($errors->any())
@@ -249,19 +230,6 @@
           </div>
         @endif
 
-        <!-- FOTO -->
-        <div class="d-flex align-items-center gap-3 mb-4">
-          <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
-            <i class="bi bi-camera fs-4"></i>
-            <span>Foto (opcional)</span>
-          </div>
-          <input type="file" id="avatarInput" name="avatar" accept="image/*" class="d-none" onchange="previewAvatar(this)" />
-          <div style="font-size:.82rem; color:#999; line-height:1.6;">
-            Adicione uma foto para que outros alunos<br />possam te identificar mais facilmente.
-          </div>
-        </div>
-
-        <hr class="my-4" style="border-color:#eef2ef;" />
         <p class="fw-bold small text-uppercase text-muted mb-3">Informações pessoais</p>
 
         <div class="row g-3">
@@ -357,19 +325,6 @@
       label.textContent   = l.text;
     }
 
-    function previewAvatar(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        const box    = input.closest('.d-flex').querySelector('.avatar-upload');
-        reader.onload = e => {
-          box.style.backgroundImage   = `url(${e.target.result})`;
-          box.style.backgroundSize    = 'cover';
-          box.style.backgroundPosition = 'center';
-          box.innerHTML = '';
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
   </script>
 </body>
 </html>
